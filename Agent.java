@@ -1,5 +1,5 @@
 /*********************************************
- *  Agent.java 
+ *  Agent.java
  *  Sample Agent for Text-Based Adventure Game
  *  COMP3411 Artificial Intelligence
  *  UNSW Session 1, 2017
@@ -11,9 +11,18 @@ import java.net.*;
 
 public class Agent {
 
+   private LinkedList<String> history;
+   private HashMap<String, Integer> toolkit = new HashMap<String, Integer>();
+   private Point Pos = new Point(2,2,'v');
+
    public char get_action( char view[][] ) {
 
       // REPLACE THIS CODE WITH AI TO CHOOSE ACTION
+      LinkedList<Point> important = searchForImportant(view);
+
+      for (Point p : important) {
+         System.out.println(p.toString());
+      }
 
       int ch=0;
 
@@ -37,6 +46,45 @@ public class Agent {
 
       return 0;
    }
+
+   private LinkedList<Point> searchForImportant(char view[][]) {
+      LinkedList<Point> importantThings = new LinkedList<Point>();
+      int x,y = 0;
+      for (x = 0; x < 5 ; x++) {
+         for (y = 0; y < 5 ; y++) {
+            switch( view[x][y] ) { // if character is a valid action, return it
+            case 'k': case 'd': case '*': case '$': case 'a': case 'T':
+            case '-': case '~':
+               importantThings.add(new Point(x, y, view[x][y]));
+            }
+         }
+      }
+      return importantThings;
+   }
+
+   private Point searchFor(char view[][], char desired) {
+      int x,y = 0;
+      for (x = 0; x < 5 ; x++) {
+         for (y = 0; y < 5 ; y++) {
+            if (view[x][y] == desired) {new Point(x, y, desired);}
+         }
+      }
+      return null;
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    void print_view( char view[][] )
    {
