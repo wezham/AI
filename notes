@@ -1,0 +1,58 @@
+//list of constraints
+
+1. try to get through door with no key or dynamite
+2. try to get through tree with no axe or dynamite
+3. try to get through wall with no dynamite
+4. try to get onto water without raft
+
+//list of heuristics
+1. can directly access treasure + infinity
+2. can acquire tool + x * (required tool multiplyer)
+3. moving in unexplored direction + y
+
+// flags
+We should have a set of flags per state to determine possible modes for continued
+strategy across moves. (maybe also store location/path) eg.
+1. Chasing treasure (found treasure and moving toward it)
+2. Chasing tool
+3. Returning to start location
+etc.
+
+
+//general strategy
+
+Consider we have an object State, which simulates a current state of the Game.
+At each turn, we generate a unique state for all possible moves the player can make.
+We immediately prune off all states in which one of above constraints are violated.
+We assign a reward function to each state based on the above
+Choose action of state with highest reward
+
+
+For each state:
+Assuming we find the treasure, but it is in an unaccessible location, we must keep a stack
+of required tools in order to access it. eg. If the treasure is blocked by a wall then a tree
+we add dynamite to the stack followed by an axe. Then we factor these into the heuristic
+to prioritize these tools.
+
+
+For the example given on the home page:
+1. get key
+2. explore until we find the goal state
+  If we open the door along the way, and find the dynamite, thats fine
+3. discover the treasure can be accessed by water
+4. push raft onto required stack
+5. push axe onto the required tools stack since we dont have
+6. find axe is blocked wall
+7. push dynamite onto stack if we dont have
+8. find and use dynamite, and pop off stack
+9. find tree and make raft, and pop off stack
+10. go to water and get onto raft
+11. get treasure
+12. realize we are now on a new island so push on raft
+12. find tree and get raft, and pop off raft
+13. use raft and return home
+
+
+//action history
+Assuming we find the goal, the easiest way to find our way back is to have a stack with
+our action history. We can pop of an action and perform the inverse (eg right vs left)
