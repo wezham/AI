@@ -29,7 +29,7 @@ public class State {
       LinkedList<State> dontViolate = new LinkedList<State>();
       for (State s : this.childrenStates) {
          if (!s.voilatesConstraint()) {
-            System.out.println("doesnt violate constraint, adding " + this.action);
+            System.out.println(s.action + " doesnt violate constraint, adding");
             dontViolate.add(s);
          }
       }
@@ -41,22 +41,28 @@ public class State {
    }
 
    public Boolean voilatesConstraint() {
+      Boolean voilatesConstraint = false;
       switch (this.action) {
          // if we move
          case 'F':
+            System.out.println("Trying to move forward " + this.action);
             switch (this.view[2][2]) {
-               case 'v': unstandable(this.view[2][1]);
-               case '^': unstandable(this.view[2][3]);
-               case '>': unstandable(this.view[3][2]);
-               default: unstandable(this.view[1][2]);
+               case 'v': voilatesConstraint = unstandable(this.view[2][1]);break;
+               case '^': voilatesConstraint = unstandable(this.view[2][3]);break;
+               case '>': voilatesConstraint = unstandable(this.view[3][2]);break;
+               default: voilatesConstraint = unstandable(this.view[1][2]);
             }
+         break;
          //if we try to use a tool, voilates constraint
          case 'C': case 'B':
             System.out.println("Trying to perform action " + this.action);
-            return true;
+            voilatesConstraint = true;
+            break;
          default:
-            return false;
+            voilatesConstraint = false;
+            break;
       }
+      return voilatesConstraint;
    }
 
    //returns true if a player cant stand on the supplied space.

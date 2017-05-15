@@ -20,14 +20,14 @@ public class Agent {
 
    public char get_action( char view[][] ) {
 
-      if (counter < 10) {
+      if (counter < 20) {
          this.currentState = new State(view, ' ', null);
          LinkedList<State> optionalMoves = this.currentState.generateChildren();
          System.out.println("Move Made: " + optionalMoves.peek());
          System.out.println("----------");
+         counter ++;
          return optionalMoves.peek().getAction();
       }
-      counter ++;
       return 'F';
    }
 
