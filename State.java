@@ -16,6 +16,7 @@ public class State {
       return this.action;
    }
 
+   //generates a single state for each possible move from this state
    public LinkedList<State> generateChildren() {
       char[] possibleMoves = {'F','L','R','C','B'};
       for (char move : possibleMoves) {
@@ -25,6 +26,7 @@ public class State {
       return this.childrenStates;
    }
 
+   //removes states from children that voilate a constraint
    private void pruneChildren() {
       LinkedList<State> dontViolate = new LinkedList<State>();
       for (State s : this.childrenStates) {
@@ -34,10 +36,6 @@ public class State {
          }
       }
       this.childrenStates = dontViolate;
-   }
-
-   public Integer evalHeuristic() {
-      return 0;
    }
 
    public Boolean voilatesConstraint() {
@@ -53,7 +51,7 @@ public class State {
                default: voilatesConstraint = unstandable(this.view[1][2]);
             }
          break;
-         //if we try to use a tool, voilates constraint
+         //if we try to use a tool, voilates constraint (this will change)
          case 'C': case 'B':
             System.out.println("Trying to perform action " + this.action);
             voilatesConstraint = true;
@@ -66,14 +64,14 @@ public class State {
    }
 
    //returns true if a player cant stand on the supplied space.
-   //ie if there is a tree, water etc
+   //ie if there is a tree, water ,wall etc
    private Boolean unstandable(char valueAtLocation) {
       switch (valueAtLocation) {
          case 'T': case '*': case '~': case '-':
             System.out.println("Unstandable " + valueAtLocation);
             return true;
          default:
-            System.out.println("Standable " + valueAtLocation);
+            System.out.println( "Standable " + valueAtLocation);
             return false;
       }
    }
