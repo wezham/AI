@@ -9,7 +9,7 @@ public class State {
       this.action = action;
       this.parentState = parentState;
       this.childrenStates = new LinkedList<State>();
-      // this.flags = new HashMap<String, Boolean>();
+      this.toolKit = new HashMap<String, Integer>();
    }
 
    public char getAction() {
@@ -20,7 +20,7 @@ public class State {
    public LinkedList<State> generateChildren() {
       char[] possibleMoves = {'F','L','R','C','B'};
       for (char move : possibleMoves) {
-         this.childrenStates.add(new State(view, move, this));
+         this.childrenStates.add(new State(this.view, move, this));
       }
       pruneChildren();
       return this.childrenStates;
@@ -77,10 +77,14 @@ public class State {
    }
 
    public String toString() {
-       return ("State: " + this.action);
-    }
+      return ("State: " + this.action);
+   }
 
-   // private HashMap<String, Boolean> flags;
+   public void setAction (char action) {
+      this.action =  action;
+   }
+
+   private HashMap<String, Integer> toolKit;
    private LinkedList<State> childrenStates;
    private char action;
    private State parentState;
