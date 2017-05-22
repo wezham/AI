@@ -19,70 +19,24 @@ public class Agent {
    private Integer counter = 0;
 
    public char get_action( char view[][] ) {
+     if(counter == 0){
+       Point a = new Point(0, 0, view[0][0]);
+       Point b = new Point(4, 4, view[4][4]);
 
-      if (counter < 20) {
-         this.currentState = new State(view, ' ', null);
-         LinkedList<State> optionalMoves = this.currentState.generateChildren();
-         System.out.println("Move Made: " + optionalMoves.peek());
-         System.out.println("----------");
-         counter ++;
-         return optionalMoves.peek().getAction();
-      }
+       Search s = new Search(view, a, b);
+       Point goal = s.aStar();
+       goal.printPath();
+     }
+      // if (counter < 2) {
+      //    this.currentState = new State(view, ' ', null);
+      //    LinkedList<State> optionalMoves = this.currentState.generateChildren();
+      //    System.out.println("Move Made: " + optionalMoves.peek());
+      //    System.out.println("----------");
+      //    counter ++;
+      //    return optionalMoves.peek().getAction();
+      // }
       return 'F';
    }
-
-
-
-
-
-   // private Queue<Point> getAdjPoint(char view[][], Point pChek){
-   //    Queue<Point> adjPoints = new LinkedList<Point>();
-   //    if(pChek.getX() != 0){
-   //       adjPoints.add(new Point(pChek.getX()-1, pChek.getY(), view[pChek.getX()][pChek.getY()]));
-   //    }
-   //    if(pChek.getX() != 4){
-   //       adjPoints.add(new Point(pChek.getX()+1, pChek.getY(), view[pChek.getX()][pChek.getY()]));
-   //    }
-   //    if(pChek.getX() != 0){
-   //       adjPoints.add(new Point(pChek.getX(), pChek.getY() -1, view[pChek.getX()][pChek.getY()]));
-   //    }
-   //    if(pChek.getX() != 4){
-   //       adjPoints.add(new Point(pChek.getX(), pChek.getY() +1, view[pChek.getX()][pChek.getY()]));
-   //    }
-   //    return adjPoints;
-   // }
-
-   // private LinkedList<Point> findPath(char view[][], Point startingPos, Point goalPos) {
-   //    LinkedList<Point> path = new LinkedList<Point>();
-   //    Queue<Point> unseenPoints =  new LinkedList<Point>();
-   //
-   //    unseenPoints.add(startingPos);
-   //    while(unseenPoints.peek() != null){
-   //       Point current = unseenPoints.remove();
-   //       if(current.equals(goalPos)){
-   //          path.add(current);
-   //          return path;
-   //       }else{
-   //          Queue<Point> adjP = getAdjPoint(view, current);
-   //          for(Point p : adjP){
-   //             if(!unseenPoints.contains(p)){
-   //                unseenPoints.add(p);
-   //             }
-   //          }
-   //       }
-   //    }
-   //    return path;
-   // }
-
-
-
-
-
-
-
-
-
-
 
    void print_view( char view[][] )
    {
