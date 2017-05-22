@@ -56,3 +56,15 @@ For the example given on the home page:
 //action history
 Assuming we find the goal, the easiest way to find our way back is to have a stack with
 our action history. We can pop of an action and perform the inverse (eg right vs left)
+
+
+each state:
+  <String, Point> items of interest
+  LinkedList<Point> previously explored
+
+
+change the state so it doesn't generate states for children before making a move
+store relative positioning of player and his move at the end of each turn.
+A* (view, start point, end point)
+  heuristic is shortest overall cost.
+  1 point for each move, X for getting through wall, water, tree, door (<- ordered)
