@@ -22,6 +22,16 @@ public class Vertex {
       return this.point;
    }
 
+   @Override
+   public boolean equals(Object other){
+     if (!(other instanceof Vertex)) {
+          return false;
+     }else{
+         Vertex otherClass = (Vertex)other;
+         return( this.point.equals(otherClass.point()));
+     }
+   }
+
    private LinkedList<Point> neighbours;
    private Point point;
 }

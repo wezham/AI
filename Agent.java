@@ -27,35 +27,41 @@ public class Agent {
        //     Point goal = s.aStar();
        //     goal.printPath();
        //   }
-       System.out.println("current Orientation: " + orientation);
 
+   //    System.out.println("current Orientation: " + orientation);
+     //
+     //
+   //    if (counter < 20) {
+   //       //if it is our first move
+   //       if (currentState == null) {
+   //          currentState = new State(view, new Point(0, 0, view[2][2]));
+   //          orientation = new Orientation(view[2][2]);
+   //       }
+   //       //otherwise, replace state and update child parent relationship btw old and new
+   //       else {
+   //          State newState = new State(view, absolutePointCalculator(lastAction));
+   //          currentState.setChildState(newState);
+   //          newState.setParentState(currentState);
+   //          currentState = newState;
+   //       }
+     //
+   //      Move m = this.currentState.findBestMove();
+   //      counter ++;
+   //      lastAction = m.getAction();
+   //      orientation.updateOrientation(lastAction);
+     //
+   //      System.out.println("Move Made: " + m);
+   //      System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
+   //      System.out.println("----------");
+     //
+     //
+   //      return lastAction;
+   //   }
 
-      if (counter < 20) {
-         //if it is our first move
-         if (currentState == null) {
-            currentState = new State(view, new Point(0, 0, view[2][2]));
-            orientation = new Orientation(view[2][2]);
-         }
-         //otherwise, replace state and update child parent relationship btw old and new
-         else {
-            State newState = new State(view, absolutePointCalculator(lastAction));
-            currentState.setChildState(newState);
-            newState.setParentState(currentState);
-            currentState = newState;
-         }
+      if (counter == 0 ){
+         Map m = new Map(view);
+      }
 
-        Move m = this.currentState.findBestMove();
-        counter ++;
-        lastAction = m.getAction();
-        orientation.updateOrientation(lastAction);
-
-        System.out.println("Move Made: " + m);
-        System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
-        System.out.println("----------");
-
-
-        return lastAction;
-     }
       return 'F';
    }
 
