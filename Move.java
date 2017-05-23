@@ -2,7 +2,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Move {
+public class Move{
 
    public Move (char[][] view, char action) {
       this.action = action;
@@ -54,6 +54,10 @@ public class Move {
 
    public String toString() {
       return String.valueOf(this.action);
+   }
+
+   public Integer getHeuristic() {
+      return this.heuristic;
    }
 
    private char[][] view;

@@ -10,6 +10,7 @@ public class State {
       this.childState = null;
       this.toolKit = new HashMap<String, Integer>();
       this.possibleMoves = new LinkedList<Move>();
+      generatePotentialMoves();
    }
 
    //evaluate position of possible moves
@@ -25,6 +26,13 @@ public class State {
          //java takes care of cleanup on its own
       }
       return this.possibleMoves;
+   }
+
+   //sorts possible moves by heuristic and returns best move
+   public Move findBestMove() {
+      //sort the moves based on their heuristic
+      this.possibleMoves.sort((o1, o2) -> o1.getHeuristic().compareTo(o2.getHeuristic()));
+      return this.possibleMoves.peek();
    }
 
 
