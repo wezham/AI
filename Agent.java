@@ -19,6 +19,7 @@ public class Agent {
    private Integer counter = 0;
 
    public char get_action( char view[][] ) {
+
      if(counter == 0){
        Point a = new Point(0, 0, view[0][0]);
        Point b = new Point(4, 4, view[4][4]);
@@ -27,14 +28,15 @@ public class Agent {
        Point goal = s.aStar();
        goal.printPath();
      }
-      // if (counter < 2) {
-      //    this.currentState = new State(view, ' ', null);
-      //    LinkedList<State> optionalMoves = this.currentState.generateChildren();
-      //    System.out.println("Move Made: " + optionalMoves.peek());
-      //    System.out.println("----------");
-      //    counter ++;
-      //    return optionalMoves.peek().getAction();
-      // }
+
+     if (counter < 20) {
+        this.currentState = new State(view);
+        Move m = this.currentState.findBestMove();
+        System.out.println("Move Made: " + m);
+        System.out.println("----------");
+        counter ++;
+        return m.getAction();
+     }
       return 'F';
    }
 
