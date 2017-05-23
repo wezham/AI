@@ -72,6 +72,16 @@ public class Point {
    public String toString() {
        return (this.getValue() + " at: (" + this.getX() + ", " + this.getY() + ")");
     }
+
+
+    //used for creating copy of a point
+    public Point(Point another) {
+       this.value = another.getValue();
+       this.x = another.getX();
+       this.y = another.getY();
+   }
+
+
     // Equality
    @Override
    public boolean equals(Object other){
