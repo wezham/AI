@@ -11,24 +11,10 @@ import java.net.*;
 
 public class Agent {
 
-   // private LinkedList<String> history;
-   // private HashMap<String, Integer> toolkit = new HashMap<String, Integer>();
-
-   //A path to a point is good if non of the constraints are violated
    private State currentState;
    private Integer counter = 0;
 
    public char get_action( char view[][] ) {
-
-     if(counter == 0){
-       Point a = new Point(0, 0, view[0][0]);
-       Point b = new Point(4, 4, view[4][4]);
-
-       Search s = new Search(view, a, b);
-       Point goal = s.aStar();
-       goal.printPath();
-     }
-
      if (counter < 20) {
         this.currentState = new State(view);
         Move m = this.currentState.findBestMove();
@@ -119,3 +105,12 @@ public class Agent {
       }
    }
 }
+
+// if (counter < 2) {
+//    this.currentState = new State(view, ' ', null);
+//    LinkedList<State> optionalMoves = this.currentState.generateChildren();
+//    System.out.println("Move Made: " + optionalMoves.peek());
+//    System.out.println("----------");
+//    counter ++;
+//    return optionalMoves.peek().getAction();
+// }

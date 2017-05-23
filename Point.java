@@ -25,12 +25,16 @@ public class Point {
    public void setValue (char val){
       this.value = val;
    }
+   
    //A Star
    private Point parentPoint;
    private float gCost;
    private float hCost;
    private float fCost;
    // Set previous point for path recollection
+   public Point getParentPoint(){
+     return this.parentPoint;
+   }
    public void setPrevious(Point pp){
      this.parentPoint = pp;
    }
