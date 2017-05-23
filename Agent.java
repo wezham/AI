@@ -11,39 +11,88 @@ import java.net.*;
 
 public class Agent {
 
-   // private LinkedList<String> history;
-   // private HashMap<String, Integer> toolkit = new HashMap<String, Integer>();
-
    //A path to a point is good if non of the constraints are violated
    private State currentState;
    private Integer counter = 0;
+   private char lastAction;
+   //represents the absolute orientation of the agent (NSEW)
+   private Orientation absoluteOrientation;
 
    public char get_action( char view[][] ) {
+   //   if(counter == 0){
+   //     Point a = new Point(0, 0, view[0][0]);
+   //     Point b = new Point(4, 4, view[4][4]);
+     //
+   //     Search s = new Search(view, a, b);
+   //     Point goal = s.aStar();
+   //     goal.printPath();
+   //   }
+   System.out.println("current Orientation: " + absoluteOrientation);
 
-     if(counter == 0){
-       Point a = new Point(0, 0, view[0][0]);
-       Point b = new Point(4, 4, view[4][4]);
 
-       Search s = new Search(view, a, b);
-       Point goal = s.aStar();
-       goal.printPath();
-     }
+      if (counter < 20) {
+         //if it is our first move
+         if (currentState == null) {
+            currentState = new State(view, new Point(0, 0, view[2][2]));
+            absoluteOrientation = new Orientation(view[2][2]);
+         }
+         //otherwise, replace state and update child parent relationship btw old and new
+         else {
+            State newState = new State(view, absolutePointCalculator(lastAction));
+            currentState.setChildState(newState);
+            newState.setParentState(currentState);
+            currentState = newState;
+         }
 
-     if (counter < 20) {
-        this.currentState = new State(view);
         Move m = this.currentState.findBestMove();
-        System.out.println("Move Made: " + m);
-        System.out.println("----------");
         counter ++;
-        return m.getAction();
+        lastAction = m.getAction();
+        absoluteOrientation.updateOrientation(lastAction);
+
+        System.out.println("Move Made: " + m);
+        System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
+        System.out.println("----------");
+
+
+        return lastAction;
      }
       return 'F';
    }
 
+
+
+
+   //only called if not the first action, meaning that currentState.point != null
+   //given a move to make, caluclates the absolute center position of the new state
+   private Point absolutePointCalculator(char action) {
+      //if we arent moving, the center remains the same
+      Point currAbsPt = currentState.getAbsolutePoint();
+      int x = currAbsPt.getX();
+      int y = currAbsPt.getY();
+      char absOrientation = absoluteOrientation.getOrientation();
+
+      if (action == 'F') {
+         //adjusts the center position for
+         switch (absOrientation) {
+            case 'S':
+               y--; break;
+            case 'N':
+               y++; break;
+            case 'E':
+               x++; break;
+            default:
+               x--;
+         }
+      }
+
+      return new Point(x, y, action);
+   }
+
+
+
    void print_view( char view[][] )
    {
       int i,j;
-
       System.out.println("\n+-----+");
       for( i=0; i < 5; i++ ) {
          System.out.print("|");

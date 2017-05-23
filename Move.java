@@ -15,7 +15,7 @@ public class Move{
       switch (this.action) {
          // if we move
          case 'F':
-            System.out.println("Trying to move forward " + this.action);
+            // System.out.println("Trying to move forward " + this.action);
             switch (this.view[2][2]) {
                case 'v': voilatesConstraint = unstandable(this.view[2][1]);break;
                case '^': voilatesConstraint = unstandable(this.view[2][3]);break;
@@ -25,7 +25,7 @@ public class Move{
          break;
          //if we try to use a tool, voilates constraint (this will change)
          case 'C': case 'B':
-            System.out.println("Trying to perform action " + this.action);
+            // System.out.println("Trying to perform action " + this.action);
             voilatesConstraint = true;
             break;
          default:
@@ -40,10 +40,10 @@ public class Move{
    private Boolean unstandable(char valueAtLocation) {
       switch (valueAtLocation) {
          case 'T': case '*': case '~': case '-':
-            System.out.println("Unstandable " + valueAtLocation);
+            // System.out.println("Unstandable " + valueAtLocation);
             return true;
          default:
-            System.out.println( "Standable " + valueAtLocation);
+            // System.out.println( "Standable " + valueAtLocation);
             return false;
       }
    }

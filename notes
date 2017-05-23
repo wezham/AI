@@ -63,8 +63,6 @@ each state:
   LinkedList<Point> previously explored
 
 
-change the state so it doesn't generate states for children before making a move
-store relative positioning of player and his move at the end of each turn.
 A* (view, start point, end point)
   heuristic is shortest overall cost.
   1 point for each move, X for getting through wall, water, tree, door (<- ordered)
