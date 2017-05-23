@@ -16,7 +16,7 @@ public class Agent {
    private Integer counter = 0;
    private char lastAction;
    //represents the absolute orientation of the agent (NSEW)
-   private Orientation absoluteOrientation;
+   private Orientation orientation;
 
    public char get_action( char view[][] ) {
        //   if(counter == 0){
@@ -27,14 +27,14 @@ public class Agent {
        //     Point goal = s.aStar();
        //     goal.printPath();
        //   }
-       System.out.println("current Orientation: " + absoluteOrientation);
+       System.out.println("current Orientation: " + orientation);
 
 
       if (counter < 20) {
          //if it is our first move
          if (currentState == null) {
             currentState = new State(view, new Point(0, 0, view[2][2]));
-            absoluteOrientation = new Orientation(view[2][2]);
+            orientation = new Orientation(view[2][2]);
          }
          //otherwise, replace state and update child parent relationship btw old and new
          else {
@@ -47,7 +47,7 @@ public class Agent {
         Move m = this.currentState.findBestMove();
         counter ++;
         lastAction = m.getAction();
-        absoluteOrientation.updateOrientation(lastAction);
+        orientation.updateOrientation(lastAction);
 
         System.out.println("Move Made: " + m);
         System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
@@ -69,7 +69,7 @@ public class Agent {
       Point currAbsPt = currentState.getAbsolutePoint();
       int x = currAbsPt.getX();
       int y = currAbsPt.getY();
-      char absOrientation = absoluteOrientation.getOrientation();
+      char absOrientation = orientation.getOrientation();
 
       if (action == 'F') {
          //adjusts the center position for
