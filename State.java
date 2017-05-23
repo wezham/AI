@@ -4,13 +4,14 @@ import java.io.*;
 
 public class State {
 
-   public State (char view[][]) {
+   public State (char view[][], Point absolutePoint) {
       this.view = view;
       this.parentState = null;
       this.childState = null;
       this.toolKit = new HashMap<String, Integer>();
       this.possibleMoves = new LinkedList<Move>();
       generatePotentialMoves();
+      this.absolutePoint = absolutePoint;
    }
 
    //evaluate position of possible moves
@@ -35,10 +36,22 @@ public class State {
       return this.possibleMoves.peek();
    }
 
+   public void setChildState(State s) {
+      this.childState = s;
+   }
+   public void setParentState(State s) {
+      this.parentState = s;
+   }
+
+   public Point getAbsolutePoint() {
+      return this.absolutePoint;
+   }
 
    private HashMap<String, Integer> toolKit;
    private State childState;
    private LinkedList<Move> possibleMoves;
    private State parentState;
    private char[][] view;
+   //this is a point whos coordinates are absolute, not relative
+   private Point absolutePoint;
 }

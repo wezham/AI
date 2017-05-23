@@ -25,7 +25,7 @@ public class Point {
    public void setValue (char val){
       this.value = val;
    }
-   
+
    //A Star
    private Point parentPoint;
    private float gCost;
