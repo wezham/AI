@@ -27,8 +27,6 @@ public class Agent {
    //     Point goal = s.aStar();
    //     goal.printPath();
    //   }
-   System.out.println("current Orientation: " + absoluteOrientation);
-
 
       if (counter < 20) {
          //if it is our first move
@@ -49,8 +47,8 @@ public class Agent {
         lastAction = m.getAction();
         absoluteOrientation.updateOrientation(lastAction);
 
-        System.out.println("Move Made: " + m);
-        System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
+        System.out.println("Current Pos: " + currentState.getAbsolutePoint());
+        System.out.println("Making move: " + m);
         System.out.println("----------");
 
 
