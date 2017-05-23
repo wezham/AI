@@ -21,8 +21,9 @@ public class Agent {
    public char get_action( char view[][] ) {
 
       if (counter < 20) {
-         this.currentState = new State(view, ' ', null);
-         LinkedList<State> optionalMoves = this.currentState.generateChildren();
+         this.currentState = new State(view);
+         LinkedList<Move> optionalMoves = this.currentState.generatePotentialMoves();
+         // optionalMoves.sort(Comparator.comparing(Move::heuristic));
          System.out.println("Move Made: " + optionalMoves.peek());
          System.out.println("----------");
          counter ++;
