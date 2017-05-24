@@ -36,6 +36,40 @@ public class Orientation {
     }
   }
 
+  //given a view and an orientation, realigns the orientation of the view as would be seen
+  //if the player was facing north
+  public char[][] orientToNorth(char[][] oldView) {
+    int oldx,oldy,newx,newy;
+    char[][] newView = oldView;
+    switch (this.orientation) {
+       case 'S':
+         for( oldy = 0, newy = 5; oldy < 5; oldy++, newy--) {
+           for( oldx = 0, newx=5; oldx < 5; oldx++, newx--) {
+              newView[newx][newy] = oldView[oldx][oldy];
+            }
+         }
+          break;
+       case 'W':
+         for( oldy = 0, newx = 5; oldy < 5; oldy++, newx--) {
+           for( oldx = 0, newy = 0; oldx < 5; oldx++, newy++) {
+              newView[newx][newy] = oldView[oldx][oldy];
+            }
+         }
+          break;
+       case 'E':
+         for( oldy = 0, newx = 0; oldy < 5; oldy++, newx++) {
+           for( oldx = 0, newy = 5; oldx < 5; oldx++, newy--) {
+              newView[newx][newy] = oldView[oldx][oldy];
+            }
+         }
+          break;
+       default:
+        break;
+       //do nothing if facing north
+    }
+    return newView;
+  }
+
   public char getOrientation() {
     return this.orientation;
   }

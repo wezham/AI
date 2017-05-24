@@ -6,15 +6,18 @@ public class Vertex {
 
    public Vertex (Point point) {
       this.point = point;
-      this.neighbours = new LinkedList<Point>();
+      this.neighbours = new LinkedList<Vertex>();
    }
 
-   public void addNeighbour(Point p) {
-      this.neighbours.add(p);
-   }
-
-   public boolean isNeighbour (Point p) {
-      return neighbours.contains(p);
+   public void addNeighbour(Vertex v1) {
+      //if the neighbours doesnt already contain a node at the same point:
+      boolean contains = false;
+      for (Vertex v : this.neighbours) {
+         if (v.samePointAs(v1)) {
+            contains = true;
+         }
+      }
+      if (!contains) {this.neighbours.add(v1);}
    }
 
    public Point getPoint() {
@@ -31,12 +34,13 @@ public class Vertex {
      }
    }
 
-   public void setPointData(char c) {
-      this.point.setValue(c);
-   }
-
    public String toString() {
-      return this.point.toString();
+      //turn list into string
+      String s = "";
+      for(Vertex v : this.neighbours) {
+         s += v.getPoint().toString();
+      }
+      return this.point.toString() + " - neighbours: " + s;
    }
 
    //
@@ -44,6 +48,6 @@ public class Vertex {
       return this.point.sameLocationAs(other.getPoint());
    }
 
-   private LinkedList<Point> neighbours;
+   private LinkedList<Vertex> neighbours;
    private Point point;
 }
