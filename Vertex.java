@@ -34,6 +34,10 @@ public class Vertex {
      }
    }
 
+   public void setPointData(char c) {
+      this.point.setValue(c);
+   }
+
    public String toString() {
       //turn list into string
       String s = "";

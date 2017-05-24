@@ -32,33 +32,59 @@ public class Map {
       System.out.println("Length of vertexes is : " + this.verticies.size());
    }
 
-   // public void updateMap(char[][] view, Point center, Orientation o) {
-   //    //recenter coordinates with center at 2,2
-   //    view = o.orientToNorth(view);
-   //    int x,y;
-   //    for( x=0; x < 5; x++ ) {
-   //       for( y=0; y < 5; y++ ) {
-   //          Vertex v = new Vertex(new Point(x,y,view[x][y]));
-   //          if (containsVertexAtSameLocation(v) != null) {
-   //             v.setPointData(view[x][y]);
-   //          } else {
-   //             this.verticies.add(v);
-   //          }
-   //       }
-   //    }
-   //    // System.out.println("New num verticies is")
-   // }
-   //
-   // // checks whether a node exists at the same coordinates as v1. ie if we need to
-   // // make a new node or just update an existing one
-   // private Vertex containsVertexAtSameLocation(Vertex v1) {
-   //    for (Vertex v : this.verticies) {
-   //       if (v.samePointAs(v1)) {
-   //          return v;
-   //       }
-   //    }
-   //    return null;
-   // }
+   public void update(char[][] view, Point center, Orientation o) {
+      //recenter coordinates with center at 2,2
+
+
+      view = o.orientToNorth(view);
+
+      //loop through point in our view
+      // int x,y;
+      // //keep a list of newly created verticies to connect appropriately afterward
+      // LinkedList<Vertex> newVerticies = new LinkedList<Vertex>();
+      // for( x=0; x < 5; x++ ) {
+      //    for( y=0; y < 5; y++ ) {
+      //       Vertex v = new Vertex(new Point(x,y,view[x][y]));
+      //       //if we have seen a vertex with this point before
+      //       Vertex existingV = containsVertexAtSameLocation(v);
+      //       if (existingV != null) {
+      //          //only update the vertex's data
+      //          existingV.setPointData(view[x][y]);
+      //       } else {
+      //          //add a new vertex
+      //          this.verticies.add(v);
+      //          newVerticies.add(v);
+      //       }
+      //    }
+      // }
+
+      //created edges between newly created verticies
+      // switch(o.getOrientation()) {
+      //    case: 'N'
+      //
+      //    break;
+      //    case: 'S'
+      //
+      //    break;
+      //    case: 'N'
+      //
+      //    break;
+      //    default:
+      // }
+
+      // System.out.println("New num verticies is")
+   }
+
+   // checks whether a node exists at the same coordinates as v1. ie if we need to
+   // make a new node or just update an existing one
+   private Vertex containsVertexAtSameLocation(Vertex v1) {
+      for (Vertex v : this.verticies) {
+         if (v.samePointAs(v1)) {
+            return v;
+         }
+      }
+      return null;
+   }
 
    private void createEdgeBtw(Vertex a, Vertex b) {
       //connet the verticies

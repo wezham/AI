@@ -17,56 +17,51 @@ public class Agent {
    private char lastAction;
    //represents the absolute orientation of the agent (NSEW)
    private Orientation orientation;
+   private Map map;
+
 
    public char get_action( char view[][] ) {
-       //   if(counter == 0){
-       //     Point a = new Point(0, 0, view[0][0]);
-       //     Point b = new Point(4, 4, view[4][4]);
-         //
-       //     Search s = new Search(view, a, b);
-       //     Point goal = s.aStar();
-       //     goal.printPath();
-       //   }
 
-   //    System.out.println("current Orientation: " + orientation);
-     //
-     //
-   //    if (counter < 20) {
-   //       //if it is our first move
-   //       if (currentState == null) {
-   //          currentState = new State(view, new Point(0, 0, view[2][2]));
-   //          orientation = new Orientation(view[2][2]);
-   //       }
-   //       //otherwise, replace state and update child parent relationship btw old and new
-   //       else {
-   //          State newState = new State(view, absolutePointCalculator(lastAction));
-   //          currentState.setChildState(newState);
-   //          newState.setParentState(currentState);
-   //          currentState = newState;
-   //       }
-     //
-   //      Move m = this.currentState.findBestMove();
-   //      counter ++;
-   //      lastAction = m.getAction();
-   //      orientation.updateOrientation(lastAction);
-     //
-   //      System.out.println("Move Made: " + m);
-   //      System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
-   //      System.out.println("----------");
-     //
-     //
-   //      return lastAction;
-   //   }
-
-      if (counter == 0 ){
-         Map m = new Map(view);
-         // m.print();
+   if (counter < 20) {
+      //if it is our first move
+      if (currentState == null) {
+         currentState = new State(view, new Point(0, 0, view[2][2]));
+         orientation = new Orientation();
       }
-      counter ++;
+      else {
+         //create a new state based and caluclate new position
+         State newState = new State(view, absolutePointCalculator(lastAction));
+         //replace state and update child parent relationship btw old and new
+         currentState.setChildState(newState);
+         newState.setParentState(currentState);
+         currentState = newState;
+      }
+        //determine best move
+        Move m = this.currentState.findBestMove();
+        lastAction = m.getAction();
+        orientation.updateOrientation(lastAction);
+
+        if (counter == 0 ){
+          map = new Map(view);
+          map.print();
+          System.out.println(map);
+       } else if (counter == 4) {
+          map.update(view, currentState.getAbsolutePoint(), orientation);
+         //  map.print();
+       }
+
+       System.out.println("Move Made: " + m);
+       System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
+       System.out.println("----------");
+
+        counter ++;
+
+        return lastAction;
+     }
+
 
       return 'F';
    }
-
 
 
 
