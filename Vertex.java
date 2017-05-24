@@ -17,8 +17,7 @@ public class Vertex {
       return neighbours.contains(p);
    }
 
-   //returns the point of a vertex. excuse naming, reads nicely: vertex.point();
-   public Point point() {
+   public Point getPoint() {
       return this.point;
    }
 
@@ -28,8 +27,21 @@ public class Vertex {
           return false;
      }else{
          Vertex otherClass = (Vertex)other;
-         return( this.point.equals(otherClass.point()));
+         return( this.point.equals(otherClass.getPoint()));
      }
+   }
+
+   public void setPointData(char c) {
+      this.point.setValue(c);
+   }
+
+   public String toString() {
+      return this.point.toString();
+   }
+
+   //
+   public boolean samePointAs(Vertex other){
+      return this.point.sameLocationAs(other.getPoint());
    }
 
    private LinkedList<Point> neighbours;

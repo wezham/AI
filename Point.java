@@ -93,6 +93,10 @@ public class Point {
       }
    }
 
+   public boolean sameLocationAs(Point other) {
+      return (this.x  == other.getX() && this.y == other.getY());
+   }
+
 
    private char value;
    private Integer x;

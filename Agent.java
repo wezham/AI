@@ -61,6 +61,7 @@ public class Agent {
       if (counter == 0 ){
          Map m = new Map(view);
       }
+      counter ++;
 
       return 'F';
    }

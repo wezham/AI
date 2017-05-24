@@ -17,6 +17,10 @@ public class Edge {
      return this.b;
    }
 
+   public String toString() {
+     return this.a.toString() + this.b.toString();
+   }
+
   //  Equality
   @Override
   public boolean equals(Object other){
