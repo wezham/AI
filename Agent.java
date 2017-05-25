@@ -16,49 +16,52 @@ public class Agent {
    private Integer counter = 0;
    private char lastAction;
    //represents the absolute orientation of the agent (NSEW)
-   private Orientation absoluteOrientation;
+   private Orientation orientation;
+   private Map map;
+
 
    public char get_action( char view[][] ) {
-       //   if(counter == 0){
-       //     Point a = new Point(0, 0, view[0][0]);
-       //     Point b = new Point(4, 4, view[4][4]);
-         //
-       //     Search s = new Search(view, a, b);
-       //     Point goal = s.aStar();
-       //     goal.printPath();
-       //   }
-       System.out.println("current Orientation: " + absoluteOrientation);
 
-
-      if (counter < 20) {
-         //if it is our first move
-         if (currentState == null) {
-            currentState = new State(view, new Point(0, 0, view[2][2]));
-            absoluteOrientation = new Orientation(view[2][2]);
-         }
-         //otherwise, replace state and update child parent relationship btw old and new
-         else {
-            State newState = new State(view, absolutePointCalculator(lastAction));
-            currentState.setChildState(newState);
-            newState.setParentState(currentState);
-            currentState = newState;
-         }
-
+   if (counter < 20) {
+      //if it is our first move
+      if (currentState == null) {
+         currentState = new State(view, new Point(0, 0, view[2][2]));
+         orientation = new Orientation();
+      }
+      else {
+         //create a new state based and caluclate new position
+         State newState = new State(view, absolutePointCalculator(lastAction));
+         //replace state and update child parent relationship btw old and new
+         currentState.setChildState(newState);
+         newState.setParentState(currentState);
+         currentState = newState;
+      }
+        //determine best move
         Move m = this.currentState.findBestMove();
-        counter ++;
         lastAction = m.getAction();
-        absoluteOrientation.updateOrientation(lastAction);
+        orientation.updateOrientation(lastAction);
 
-        System.out.println("Move Made: " + m);
-        System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
-        System.out.println("----------");
+        if (counter == 0 ){
+          map = new Map(view);
+          map.print();
+          System.out.println(map);
+       } else if (counter == 4) {
+          map.update(view, currentState.getAbsolutePoint(), orientation);
+         //  map.print();
+       }
 
+       System.out.println("Move Made: " + m);
+       System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
+       System.out.println("----------");
+
+        counter ++;
 
         return lastAction;
      }
+
+
       return 'F';
    }
-
 
 
 
@@ -69,7 +72,7 @@ public class Agent {
       Point currAbsPt = currentState.getAbsolutePoint();
       int x = currAbsPt.getX();
       int y = currAbsPt.getY();
-      char absOrientation = absoluteOrientation.getOrientation();
+      char absOrientation = orientation.getOrientation();
 
       if (action == 'F') {
          //adjusts the center position for

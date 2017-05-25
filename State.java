@@ -4,14 +4,14 @@ import java.io.*;
 
 public class State {
 
-   public State (char view[][], Point absolutePoint) {
+   public State (char view[][], Point center) {
       this.view = view;
       this.parentState = null;
       this.childState = null;
       this.toolKit = new HashMap<String, Integer>();
       this.possibleMoves = new LinkedList<Move>();
       generatePotentialMoves();
-      this.absolutePoint = absolutePoint;
+      this.center = center;
    }
 
    //evaluate position of possible moves
@@ -44,7 +44,7 @@ public class State {
    }
 
    public Point getAbsolutePoint() {
-      return this.absolutePoint;
+      return this.center;
    }
 
    private HashMap<String, Integer> toolKit;
@@ -53,5 +53,5 @@ public class State {
    private State parentState;
    private char[][] view;
    //this is a point whos coordinates are absolute, not relative
-   private Point absolutePoint;
+   private Point center;
 }
