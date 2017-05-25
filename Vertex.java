@@ -9,6 +9,12 @@ public class Vertex {
       this.neighbours = new LinkedList<Vertex>();
    }
 
+   public Vertex (int x, int y, char value) {
+     Point p = new Point(x, y, value);
+     this.point = p;
+     this.neighbours = new LinkedList<Vertex>();
+   }
+
    public void addNeighbour(Vertex v1) {
       //if the neighbours doesnt already contain a node at the same point:
       boolean contains = false;
@@ -55,9 +61,24 @@ public class Vertex {
     return this.point.getY();
    }
 
-   //
+
+   public int xDistTo(Vertex p2) {
+      return this.getX() - p2.getX();
+   }
+
+
+   public int yDistTo(Vertex p2) {
+      return this.getY() - p2.getY();
+   }
+
+
+
    public boolean samePointAs(Vertex other){
       return this.point.sameLocationAs(other.getPoint());
+   }
+
+   public int numNeighbours() {
+      return this.neighbours.size();
    }
 
    private LinkedList<Vertex> neighbours;

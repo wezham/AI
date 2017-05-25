@@ -70,7 +70,7 @@ public class Point {
 
    // Debugging
    public String toString() {
-       return (this.getValue() + " at: (" + this.getX() + ", " + this.getY() + ")");
+       return (this.getValue() + " (" + this.getX() + "," + this.getY() + ")");
     }
 
 

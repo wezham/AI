@@ -47,7 +47,6 @@ public class Orientation {
   //given a view and an orientation, realigns the orientation of the view as would be seen
   //if the player was facing north
   public char[][] orientToNorth(char[][] oldView) {
-    print_view(oldView);
     int x,y;
 
     char[][] newView = new char[5][5];
@@ -59,7 +58,6 @@ public class Orientation {
           break;
        case 'W':
           System.out.println("facing West changing: ");
-
           newView = rotateMapRight(oldView, 3);
           break;
        case 'E':
