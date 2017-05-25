@@ -71,6 +71,9 @@ public class Vertex {
       return this.getY() - p2.getY();
    }
 
+   public char getValue() {
+      return this.point.getValue();
+   }
 
 
    public boolean samePointAs(Vertex other){

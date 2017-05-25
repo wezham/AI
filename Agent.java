@@ -74,9 +74,9 @@ public class Agent {
          //adjusts the center position for
          switch (absOrientation) {
             case 'S':
-               y--; break;
-            case 'N':
                y++; break;
+            case 'N':
+               y--; break;
             case 'E':
                x++; break;
             default:
@@ -166,51 +166,3 @@ public class Agent {
       }
    }
 }
-
-/*
-//represents the absolute orientation of the agent (NSEW)
-//  private Orientation orientation;
-//  private Map map;
-//
-//
-//  public char get_action( char view[][] ) {
-//
-//  if (counter < 20) {
-//     //if it is our first move
-//     if (currentState == null) {
-//        currentState = new State(view, new Point(0, 0, view[2][2]));
-//        orientation = new Orientation();
-//     }
-//     else {
-//        //create a new state based and caluclate new position
-//        State newState = new State(view, absolutePointCalculator(lastAction));
-//        //replace state and update child parent relationship btw old and new
-//        currentState.setChildState(newState);
-//        newState.setParentState(currentState);
-//        currentState = newState;
-//     }
-//       //determine best move
-//       Move m = this.currentState.findBestMove();
-//       lastAction = m.getAction();
-//       orientation.updateOrientation(lastAction);
-//
-//       if (counter == 0 ){
-//         map = new Map(view);
-//         map.print();
-//         System.out.println(map);
-//      } else if (counter == 4) {
-//         map.update(view, currentState.getAbsolutePoint(), orientation);
-//        //  map.print();
-//      }
-//
-//      System.out.println("Move Made: " + m);
-//      System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
-//      System.out.println("----------");
-//
-//       counter ++;
-//
-//       return lastAction;
-//    }
-//
-//
-*/

@@ -71,6 +71,33 @@ public class Orientation {
     return newView;
   }
 
+
+  public int xPositionInFrontOfPlayer(Vertex current) {
+    switch (this.orientation) {
+       case 'S':
+         return current.getX();
+       case 'W':
+         return current.getX()-1;
+       case 'E':
+         return current.getX()+1;
+       default:
+         return current.getX();
+    }
+  }
+
+  public int yPositionInFrontOfPlayer(Vertex current) {
+    switch (this.orientation) {
+       case 'S':
+         return current.getY()+1;
+       case 'W':
+         return current.getY();
+       case 'E':
+         return current.getY();
+       default:
+         return current.getY()-1;
+    }
+  }
+
   public char getOrientation() {
     return this.orientation;
   }

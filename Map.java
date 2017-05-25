@@ -36,24 +36,34 @@ public class Map {
 
    public void update(char[][] view, Vertex center, Orientation o) {
 
-      char[][] updatedView = o.orientToNorth(view);
+      char[][] updatedView =view;// o.orientToNorth(view);
+
+      print_view(updatedView);
 
       // loop through point in our view
       int x,y;
       //keep a list of newly created verticies to connect appropriately afterward
       LinkedList<Vertex> newVerticies = new LinkedList<Vertex>();
-      for( x=0; x < 5; x++ ) {
-         for( y=0; y < 5; y++ ) {
+      System.out.println("Current center: " + center);
+
+      for( y=0; y < 5; y++ ) {
+         for( x=0; x < 5; x++ ) {
             //account for offset of current center from absolute center
-            int xC = x + center.getX() - 2;
-            int yC = y + center.getY() - 2;
-            Vertex v = new Vertex(xC, yC, updatedView[x][y]);
+            int relX = x + center.getX() - 2;
+            int relY = y + center.getY() - 2;
+            Vertex v = new Vertex(relX, relY, updatedView[y][x]);
             //if we have seen a vertex with this point before
             Vertex existingV = containsVertexAtSameLocation(v);
             if (existingV != null) {
                //only update the vertex's data
-               existingV.setPointData(updatedView[x][y]);
-               System.out.println("Updating Vertex: " + existingV);
+               // System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[x][y]);
+               // System.out.println("Updating Vertex: " + existingV);
+               if (existingV.getX() == o.yPositionInFrontOfPlayer(center) && existingV.getY() == o.xPositionInFrontOfPlayer(center)) {
+                  System.out.println("Found point in front " + existingV) ;
+                  existingV.setPointData(updatedView[y][x]);
+                  System.out.println("updated " + existingV) ;
+               }
+               // System.out.println("Gave ^^ " + String.valueOf(updatedView[x][y]));
             } else {
                //add a new vertex
                System.out.println("New Vertex: " + v);
@@ -88,6 +98,7 @@ public class Map {
          }
       }
    }
+
 
    //searches for pairs btw old and new boundaries with the x and y differences passed as params
    // eg. when adding new boundaries to the north of us, look for vert where new boundary y - old boundary y = 1
@@ -189,6 +200,26 @@ public class Map {
       //this should never happen, need to throw exception?
       return null;
     }
+
+    void print_view( char view[][] )
+   {
+      int i,j;
+      System.out.println("\n+-----+");
+      for( i=0; i < 5; i++ ) {
+         System.out.print("|");
+         for( j=0; j < 5; j++ ) {
+            if(( i == 2 )&&( j == 2 )) {
+               System.out.print('^');
+            }
+            else {
+               System.out.print( view[i][j] );
+            }
+         }
+         System.out.println("|");
+      }
+      System.out.println("+-----+");
+   }
+
 
    private LinkedList<Vertex> boundary;
    private LinkedList<Vertex> verticies;
