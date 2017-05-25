@@ -12,11 +12,6 @@ import java.net.*;
 public class Agent {
 
    //A path to a point is good if non of the constraints are violated
-
-   private Integer counter = 0;
-   private char lastAction;
-
-   private Orientation absoluteOrientation;
    private LinkedList<Character> moves = new LinkedList<Character>();
 
    private void get_actions(char view[][]){
@@ -29,9 +24,70 @@ public class Agent {
      LinkedList<Point> path = s.aStar(a, b);
    }
 
+   private Integer counter = 0;
+   private char lastAction;
+   //represents the absolute orientation of the agent (NSEW)
+   private Orientation orientation;
+   private Map map;
+   private Vertex currentVertex;
 
    public char get_action( char view[][] ) {
-     return 'F';
+     char move = 'F';
+
+     //FIRST THING IS UPDATE THE MAP
+
+     if (counter == 0) {
+        //if it is our first move
+        orientation = new Orientation();
+        map = new Map(view);
+        map.print();
+        System.out.println(map);
+        currentVertex = map.findVertexByCoordinates(2,2);
+        // move = 'L';
+      } else {
+        // map.update(view, currentVertex.getPoint(), orientation);
+      }
+
+      counter ++;
+
+      //update orientation once weve decided our move
+      orientation.updateOrientation(move);
+
+      //update the vertex to the new point
+      currentVertex = newVertexCalc(view, move);
+      System.out.println("Making Move: " + String.valueOf(move));
+      System.out.println("New Vertex: " + currentVertex);
+
+      return move;
+   }
+
+
+
+   //only called if not the first action, meaning that currentState.point != null
+   //given a move to make, caluclates the absolute center position of the new state
+   private Vertex newVertexCalc(char[][] view, char action) {
+      //if we arent moving, the center remains the same
+      Vertex newVertex = currentVertex;
+      int x = currentVertex.getX();
+      int y = currentVertex.getY();
+      char absOrientation = orientation.getOrientation();
+
+      if (action == 'F') {
+         //adjusts the center position for
+         switch (absOrientation) {
+            case 'S':
+               y--; break;
+            case 'N':
+               y++; break;
+            case 'E':
+               x++; break;
+            default:
+               x--;
+         }
+      }
+
+
+      return map.findVertexByCoordinates(x, y);
    }
 
    void print_view( char view[][] )

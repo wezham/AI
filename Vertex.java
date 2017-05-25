@@ -47,6 +47,14 @@ public class Vertex {
       return this.point.toString() + " - neighbours: " + s;
    }
 
+   public int getX() {
+    return this.point.getX();
+   }
+
+   public int getY() {
+    return this.point.getY();
+   }
+
    //
    public boolean samePointAs(Vertex other){
       return this.point.sameLocationAs(other.getPoint());

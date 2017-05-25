@@ -98,5 +98,15 @@ public class Map {
       }
    }
 
+   public Vertex findVertexByCoordinates(int x, int y) {
+      for (Vertex v : this.verticies) {
+         if(v.getX() == x && v.getY() == y) {
+            return v;
+         }
+      }
+      //this should never happen
+      return null;
+    }
+
    private LinkedList<Vertex> verticies;
 }
