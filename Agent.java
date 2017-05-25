@@ -13,7 +13,6 @@ public class Agent {
 
    //A path to a point is good if non of the constraints are violated
    private Integer counter = 0;
-   private char lastAction;
    //represents the absolute orientation of the agent (NSEW)
    private Orientation orientation;
    private Map map;
@@ -29,11 +28,10 @@ public class Agent {
         orientation = new Orientation();
         map = new Map(view);
         map.print();
-        System.out.println(map);
         currentVertex = map.findVertexByCoordinates(2,2);
-        // move = 'L';
       } else {
-        // map.update(view, currentVertex.getPoint(), orientation);
+        map.update(view, currentVertex, orientation);
+        map.print();
       }
 
       counter ++;
@@ -46,7 +44,7 @@ public class Agent {
       System.out.println("Making Move: " + String.valueOf(move));
       System.out.println("New Vertex: " + currentVertex);
 
-      return move;
+      return 'F';
    }
 
 
