@@ -62,9 +62,9 @@ public class Agent {
          //adjusts the center position for
          switch (absOrientation) {
             case 'S':
-               y--; break;
-            case 'N':
                y++; break;
+            case 'N':
+               y--; break;
             case 'E':
                x++; break;
             default:
