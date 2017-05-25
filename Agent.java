@@ -12,7 +12,7 @@ import java.net.*;
 public class Agent {
 
    //A path to a point is good if non of the constraints are violated
-   private State currentState;
+
    private Integer counter = 0;
    private char lastAction;
 
@@ -33,36 +33,6 @@ public class Agent {
    public char get_action( char view[][] ) {
      return 'F';
    }
-
-
-
-   //only called if not the first action, meaning that currentState.point != null
-   //given a move to make, caluclates the absolute center position of the new state
-   private Point absolutePointCalculator(char action) {
-      //if we arent moving, the center remains the same
-      Point currAbsPt = currentState.getAbsolutePoint();
-      int x = currAbsPt.getX();
-      int y = currAbsPt.getY();
-      char absOrientation = orientation.getOrientation();
-
-      if (action == 'F') {
-         //adjusts the center position for
-         switch (absOrientation) {
-            case 'S':
-               y--; break;
-            case 'N':
-               y++; break;
-            case 'E':
-               x++; break;
-            default:
-               x--;
-         }
-      }
-
-      return new Point(x, y, action);
-   }
-
-
 
    void print_view( char view[][] )
    {
