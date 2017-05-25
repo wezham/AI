@@ -2,35 +2,33 @@ import java.util.*;
 import java.io.*;
 public class Search {
 
-  public Search(char view[][], Point a, Point b){
+  public Search(char view[][]){
     this.view = view;
-    this.a = a;
-    this.b = b;
   }
 
-  public Point aStar(){
+  public LinkedList<Point> aStar(Point a, Point b){
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();
 
     // Initalise starting node
-    this.a.setGCost(0);
-    this.a.setHCost(straightLineDistance(this.a, this.b));
-    this.a.setFCost();
+    a.setGCost(0);
+    a.setHCost(straightLineDistance(a, b));
+    a.setFCost();
 
-    openList.add(this.a);
-    openListCheck.add(this.a);
+    openList.add(a);
+    openListCheck.add(a);
     while(openList.size() != 0){
       Point curr = openList.poll();
       Queue<Point> adjNodes = this.getAdjPoint(view, curr);
       for(Point aj : adjNodes){
         aj.setPrevious(curr);
         // If goal return current point
-        if(aj.equals(this.b)){
-          return aj;
+        if(aj.equals(b)){
+          return generatePath(aj);
         }
         aj.setGCost(1);
-        aj.setHCost(straightLineDistance(aj, this.b));
+        aj.setHCost(straightLineDistance(aj, b) + obstacle(aj));
         aj.setFCost();
         int x = closedList.indexOf(aj);
         int y = openListCheck.indexOf(aj);
@@ -50,15 +48,36 @@ public class Search {
       }
       closedList.add(curr);
     }
-    return this.b;
+    return generatePath(b);
+  }
+
+  private LinkedList<Point> generatePath(Point b){
+    Point goal = b;
+    LinkedList<Point> path = new LinkedList<Point>();
+    while((goal.getParentPoint()) != null){
+      path.addFirst(goal);
+      goal = goal.getParentPoint();
+    }
+    return path;
   }
 
   // For calculating hCost subject to change I guess
-  public float straightLineDistance(Point a, Point b){
+  private float straightLineDistance(Point a, Point b){
     double x = Math.pow((a.getX()-b.getX()), 2);
     double y = Math.pow((a.getY()-b.getY()), 2);
     float d = (float) Math.sqrt(x + y);
     return d;
+  }
+  private float obstacle(Point dest){
+    float val = 0;
+    switch(dest.getValue()){
+      case('T'): val = 1000 ;break;
+      case('-'): val = 1000 ;break;
+      case('*'): val = 1000 ;break;
+      case('~'): val = 1000 ;break;
+      default: val = 0;
+    }
+    return val;
   }
 
   // Get adj points
