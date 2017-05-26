@@ -31,7 +31,7 @@ public class Agent {
    private Point currentVertex;
 
    public char get_action( char view[][] ) {
-     char move = 'F';
+     char move = 'L';
 
      //FIRST THING IS UPDATE THE MAP
 
@@ -41,6 +41,7 @@ public class Agent {
         map = new Map(view);
         map.print();
         currentVertex = map.findVertexByCoordinates(2,2);
+        move = 'L';
       } else {
         map.update(view, currentVertex, orientation);
         map.print();
@@ -54,7 +55,7 @@ public class Agent {
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
       System.out.println("Making Move: " + String.valueOf(move));
-      System.out.println("New Vertex: " + currentVertex);
+      System.out.println("New center: " + currentVertex);
 
       return 'F';
    }

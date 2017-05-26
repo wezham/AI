@@ -72,16 +72,17 @@ public class Orientation {
   }
 
 
-  public int xPositionInFrontOfPlayer(Vertex current) {
+
+  public char playerCharacter () {
     switch (this.orientation) {
        case 'S':
-         return current.getX();
+         return 'v';
        case 'W':
-         return current.getX()-1;
+         return '<';
        case 'E':
-         return current.getX()+1;
+         return '>';
        default:
-         return current.getX();
+         return '^';
     }
   }
 

@@ -13,7 +13,12 @@ public class Map {
       int x,y;
       for( x=0; x < 5; x++ ) {
          for( y=0; y < 5; y++ ) {
-            this.verticies.add(new Point(x, y, view[y][x]));
+            char value = view[y][x];
+            //add the players direction char in
+            if (x == 2 && y == 2) {
+               value = '^';
+            }
+            this.verticies.add(new Point(x, y, value));
          }
       }
 
@@ -35,7 +40,7 @@ public class Map {
 
    public void update(char[][] view, Point center, Orientation o) {
 
-      char[][] updatedView =view;// o.orientToNorth(view);
+      char[][] updatedView = o.orientToNorth(view);
 
       print_view(updatedView);
 
@@ -50,11 +55,16 @@ public class Map {
             //account for offset of current center from absolute center
             int relX = x + center.getX() - 2;
             int relY = y + center.getY() - 2;
-            Point p = new Point(relX, relY, updatedView[y][x]);
+            char value = updatedView[y][x];
+            //add the players direction char in
+            if (x == center.getX() && y == center.getY()) {
+               value = o.playerCharacter();
+            }
+            Point p = new Point(relX, relY, value);
             //if we have seen a vertex with this point before
             Point existingV = containsPointAtSameLocation(p);
             if (existingV != null) {
-               existingV.setValue(updatedView[y][x]);
+               existingV.setValue(value);
             } else {
                //add a new vertex
                // System.out.println("New Vertex: " + p);
