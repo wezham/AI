@@ -8,6 +8,7 @@ public class Point {
       this.value = value;
       this.x = x;
       this.y = y;
+      this.neighbours = new LinkedList<Point>();
    }
    // Setters and Getters
    public Integer getX (){
@@ -24,6 +25,18 @@ public class Point {
 
    public void setValue (char val){
       this.value = val;
+   }
+
+   public int xDistTo(Point p2) {
+      return this.x - p2.getX();
+   }
+
+   public int yDistTo(Point p2) {
+      return this.y - p2.getY();
+   }
+
+   public int numNeighbours() {
+      return this.neighbours.size();
    }
 
    //A Star
@@ -59,6 +72,17 @@ public class Point {
      this.fCost = this.gCost + this.hCost;
    }
 
+   public void addNeighbour(Point v1) {
+      //if the neighbours doesnt already contain a node at the same point:
+      boolean contains = false;
+      for (Point v : this.neighbours) {
+         if (v.sameLocationAs(v1)) {
+            contains = true;
+         }
+      }
+      if (!contains) {this.neighbours.add(v1);}
+   }
+
    public void printPath(){
     System.out.println("Me");
     System.out.println(this.toString());
@@ -70,7 +94,12 @@ public class Point {
 
    // Debugging
    public String toString() {
-       return (this.getValue() + " at: (" + this.getX() + ", " + this.getY() + ")");
+      //turn list into string
+      String s = "";
+      for(Point p : this.neighbours) {
+          s += " (" + p.getX() + "," + p.getY() + ") ";
+      }
+      return this.getValue() + " (" + this.getX() + "," + this.getY() + ")" + " - neighbours: " + s;
     }
 
 
@@ -98,6 +127,7 @@ public class Point {
    }
 
 
+   private LinkedList<Point> neighbours;
    private char value;
    private Integer x;
    private Integer y;

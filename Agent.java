@@ -12,11 +12,6 @@ import java.net.*;
 public class Agent {
 
    //A path to a point is good if non of the constraints are violated
-
-   private Integer counter = 0;
-   private char lastAction;
-
-   private Orientation absoluteOrientation;
    private LinkedList<Character> moves = new LinkedList<Character>();
 
    private void get_actions(char view[][]){
@@ -29,9 +24,69 @@ public class Agent {
      LinkedList<Point> path = s.aStar(a, b);
    }
 
+   private Integer counter = 0;
+   //represents the absolute orientation of the agent (NSEW)
+   private Orientation orientation;
+   private Map map;
+   private Point currentVertex;
 
    public char get_action( char view[][] ) {
-     return 'F';
+     char move = 'L';
+
+     //FIRST THING IS UPDATE THE MAP
+
+     if (counter == 0) {
+        //if it is our first move
+        orientation = new Orientation();
+        map = new Map(view);
+        map.print();
+        currentVertex = map.findVertexByCoordinates(2,2);
+        move = 'L';
+      } else {
+        map.update(view, currentVertex, orientation);
+        map.print();
+      }
+
+      counter ++;
+
+      //update orientation once weve decided our move
+      orientation.updateOrientation(move);
+
+      //update the vertex to the new point
+      currentVertex = newVertexCalc(view, move);
+      System.out.println("Making Move: " + String.valueOf(move));
+      System.out.println("New center: " + currentVertex);
+
+      return 'F';
+   }
+
+
+
+   //only called if not the first action, meaning that currentState.point != null
+   //given a move to make, caluclates the absolute center position of the new state
+   private Point newVertexCalc(char[][] view, char action) {
+      //if we arent moving, the center remains the same
+      Point newVertex = currentVertex;
+      int x = currentVertex.getX();
+      int y = currentVertex.getY();
+      char absOrientation = orientation.getOrientation();
+
+      if (action == 'F') {
+         //adjusts the center position for
+         switch (absOrientation) {
+            case 'S':
+               y++; break;
+            case 'N':
+               y--; break;
+            case 'E':
+               x++; break;
+            default:
+               x--;
+         }
+      }
+
+
+      return map.findVertexByCoordinates(x, y);
    }
 
    void print_view( char view[][] )
@@ -112,51 +167,3 @@ public class Agent {
       }
    }
 }
-
-/*
-//represents the absolute orientation of the agent (NSEW)
-//  private Orientation orientation;
-//  private Map map;
-//
-//
-//  public char get_action( char view[][] ) {
-//
-//  if (counter < 20) {
-//     //if it is our first move
-//     if (currentState == null) {
-//        currentState = new State(view, new Point(0, 0, view[2][2]));
-//        orientation = new Orientation();
-//     }
-//     else {
-//        //create a new state based and caluclate new position
-//        State newState = new State(view, absolutePointCalculator(lastAction));
-//        //replace state and update child parent relationship btw old and new
-//        currentState.setChildState(newState);
-//        newState.setParentState(currentState);
-//        currentState = newState;
-//     }
-//       //determine best move
-//       Move m = this.currentState.findBestMove();
-//       lastAction = m.getAction();
-//       orientation.updateOrientation(lastAction);
-//
-//       if (counter == 0 ){
-//         map = new Map(view);
-//         map.print();
-//         System.out.println(map);
-//      } else if (counter == 4) {
-//         map.update(view, currentState.getAbsolutePoint(), orientation);
-//        //  map.print();
-//      }
-//
-//      System.out.println("Move Made: " + m);
-//      System.out.println("Absolute Center Before Move: " + currentState.getAbsolutePoint());
-//      System.out.println("----------");
-//
-//       counter ++;
-//
-//       return lastAction;
-//    }
-//
-//
-*/
