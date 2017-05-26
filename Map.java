@@ -13,7 +13,8 @@ public class Map {
       int x,y;
       for( x=0; x < 5; x++ ) {
          for( y=0; y < 5; y++ ) {
-            this.verticies.add(new Vertex(x, y, view[x][y]));
+            System.out.println("Creating new vertex " + new Vertex(x, y, view[y][x]));
+            this.verticies.add(new Vertex(x, y, view[y][x]));
          }
       }
 
@@ -36,7 +37,7 @@ public class Map {
 
    public void update(char[][] view, Vertex center, Orientation o) {
 
-      char[][] updatedView =view;// o.orientToNorth(view);
+      char[][] updatedView = o.orientToNorth(view);
 
       print_view(updatedView);
 
@@ -56,13 +57,9 @@ public class Map {
             Vertex existingV = containsVertexAtSameLocation(v);
             if (existingV != null) {
                //only update the vertex's data
-               // System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[x][y]);
+               System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[y][x]);
                // System.out.println("Updating Vertex: " + existingV);
-               if (existingV.getX() == o.yPositionInFrontOfPlayer(center) && existingV.getY() == o.xPositionInFrontOfPlayer(center)) {
-                  System.out.println("Found point in front " + existingV) ;
-                  existingV.setPointData(updatedView[y][x]);
-                  System.out.println("updated " + existingV) ;
-               }
+               existingV.setPointData(updatedView[y][x]);
                // System.out.println("Gave ^^ " + String.valueOf(updatedView[x][y]));
             } else {
                //add a new vertex

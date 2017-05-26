@@ -19,7 +19,7 @@ public class Agent {
    private Vertex currentVertex;
 
    public char get_action( char view[][] ) {
-     char move = 'F';
+     char move = 'L';
 
      //FIRST THING IS UPDATE THE MAP
 
@@ -29,9 +29,11 @@ public class Agent {
         map = new Map(view);
         map.print();
         currentVertex = map.findVertexByCoordinates(2,2);
+        move = 'L';
       } else {
         map.update(view, currentVertex, orientation);
         map.print();
+        move = 'F';
       }
 
       counter ++;
@@ -44,7 +46,7 @@ public class Agent {
       System.out.println("Making Move: " + String.valueOf(move));
       System.out.println("New Vertex: " + currentVertex);
 
-      return 'F';
+      return move;
    }
 
 
