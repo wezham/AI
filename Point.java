@@ -34,7 +34,9 @@ public class Point {
    public int yDistTo(Point p2) {
       return this.y - p2.getY();
    }
-
+   public LinkedList<Point> neighbours(){
+     return this.neighbours;
+   }
    public int numNeighbours() {
       return this.neighbours.size();
    }
@@ -63,7 +65,10 @@ public class Point {
    public void setGCost(float distance){
      if(this.parentPoint != null){
       this.gCost = this.parentPoint.getGCost() + distance;
-     }
+    }else{
+      this.gCost = 0;
+    }
+
    }
    public void setHCost(float distance){
      this.hCost = distance;
@@ -96,9 +101,9 @@ public class Point {
    public String toString() {
       //turn list into string
       String s = "";
-      for(Point p : this.neighbours) {
-          s += " (" + p.getX() + "," + p.getY() + ") ";
-      }
+      // for(Point p : this.neighbours) {
+      //     s += " (" + p.getX() + "," + p.getY() + ") ";
+      // }
       return this.getValue() + " (" + this.getX() + "," + this.getY() + ")" + " - neighbours: " + s;
     }
 

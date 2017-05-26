@@ -11,24 +11,13 @@ import java.net.*;
 
 public class Agent {
 
-   //A path to a point is good if non of the constraints are violated
-   private LinkedList<Character> moves = new LinkedList<Character>();
-
-   private void get_actions(char view[][]){
-     PathPlanner pathPlanner = new PathPlanner();
-     Point a = new Point(2, 2, '^');
-     Point b = new Point(4, 4, view[4][4]);
-     //should be map
-     Search s = new Search(view);
-     // Given the map = run method that generates aStar searches two boundary points
-     LinkedList<Point> path = s.aStar(a, b);
-   }
-
    private Integer counter = 0;
    //represents the absolute orientation of the agent (NSEW)
    private Orientation orientation;
    private Map map;
    private Point currentVertex;
+   private PathPlanner pathPlanner;
+   private Search search;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -37,14 +26,17 @@ public class Agent {
 
      if (counter == 0) {
         //if it is our first move
-        orientation = new Orientation();
-        map = new Map(view);
-        map.print();
+        this.orientation = new Orientation();
+        this.pathPlanner = new PathPlanner();
+        this.map = new Map(view);
+        this.search = new Search(this.map);
+        // map.print();
         currentVertex = map.findVertexByCoordinates(2,2);
+        get_actions(currentVertex);
         move = 'L';
       } else {
         map.update(view, currentVertex, orientation);
-        map.print();
+        // map.print();
       }
 
       counter ++;
@@ -58,6 +50,21 @@ public class Agent {
       System.out.println("New center: " + currentVertex);
 
       return 'F';
+   }
+
+   private LinkedList<Character> moves = new LinkedList<Character>();
+
+   private void get_actions(Point playerPos){
+     //Our point
+     Point player = playerPos;
+     LinkedList<Point> boundaryPoints = this.map.getBoundaries();
+
+     Point first = boundaryPoints.poll();
+     LinkedList<Point> res = this.search.aStar(player, first);
+     System.out.println("res");
+     for(Point p : res){
+       System.out.println(p.toString());
+     }
    }
 
 
