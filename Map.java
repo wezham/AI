@@ -13,12 +13,7 @@ public class Map {
       int x,y;
       for( x=0; x < 5; x++ ) {
          for( y=0; y < 5; y++ ) {
-<<<<<<< HEAD
-            this.verticies.add(new Vertex(x, y, view[x][y]));
-=======
-            System.out.println("Creating new vertex " + new Point(x, y, view[y][x]));
             this.verticies.add(new Point(x, y, view[y][x]));
->>>>>>> working, deleting prints
          }
       }
 
@@ -36,7 +31,6 @@ public class Map {
       }
 
       initBoundary();
-      System.out.println("Length of vertexes is : " + this.verticies.size());
    }
 
    public void update(char[][] view, Point center, Orientation o) {
@@ -60,22 +54,10 @@ public class Map {
             //if we have seen a vertex with this point before
             Point existingV = containsPointAtSameLocation(p);
             if (existingV != null) {
-               //only update the vertex's data
-               // System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[x][y]);
-               // System.out.println("Updating Vertex: " + existingV);
-<<<<<<< HEAD
-               if (existingV.getX() == o.yPositionInFrontOfPlayer(center) && existingV.getY() == o.xPositionInFrontOfPlayer(center)) {
-                  System.out.println("Found point in front " + existingV) ;
-                  existingV.setPointData(updatedView[y][x]);
-                  System.out.println("updated " + existingV) ;
-               }
-=======
                existingV.setValue(updatedView[y][x]);
->>>>>>> working, deleting prints
-               // System.out.println("Gave ^^ " + String.valueOf(updatedView[x][y]));
             } else {
                //add a new vertex
-               System.out.println("New Vertex: " + p);
+               // System.out.println("New Vertex: " + p);
                this.verticies.add(p);
                newVerticies.add(p);
             }
