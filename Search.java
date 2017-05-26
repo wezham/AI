@@ -2,8 +2,8 @@ import java.util.*;
 import java.io.*;
 public class Search {
 
-  public Search(char view[][]){
-    this.view = view;
+  public Search(Map map){
+    this.map = map;
   }
 
   public LinkedList<Point> aStar(Point a, Point b){
@@ -18,30 +18,27 @@ public class Search {
 
     openList.add(a);
     openListCheck.add(a);
+
     while(openList.size() != 0){
       Point curr = openList.poll();
-      Queue<Point> adjNodes = this.getAdjPoint(view, curr);
+      Queue<Point> adjNodes = curr.neighbours();
       for(Point aj : adjNodes){
-        aj.setPrevious(curr);
-        // If goal return current point
         if(aj.equals(b)){
+          aj.setPrevious(curr);
           return generatePath(aj);
         }
-        aj.setGCost(1);
-        aj.setHCost(straightLineDistance(aj, b) + obstacle(aj));
-        aj.setFCost();
         int x = closedList.indexOf(aj);
         int y = openListCheck.indexOf(aj);
-        if(y > 0){
-          if(openListCheck.get(y).getFCost() < aj.getFCost()){
-            continue;
-          }
+        if((y >= 0 ) && (openListCheck.get(y).getGCost() < (curr.getGCost()+1) ) ){
+          continue;
         }
-        else if(x > 0){
-          if(closedList.get(x).getFCost() < aj.getFCost()){
-            continue;
-          }
+        else if((x >= 0) && (closedList.get(x).getGCost() < (curr.getGCost()+1) ) ){
+          continue;
         }else{
+          aj.setPrevious(curr);
+          aj.setGCost(1);
+          aj.setHCost(straightLineDistance(aj, b) + obstacle(aj));
+          aj.setFCost();
           openList.add(aj);
           openListCheck.add(aj);
         }
@@ -107,5 +104,5 @@ public class Search {
 
   private Point a;
   private Point b;
-  private char view[][];
+  private Map map;
 }

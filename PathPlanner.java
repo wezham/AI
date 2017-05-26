@@ -56,7 +56,7 @@ public class PathPlanner {
   return FORWARD;
 }
 
-public LinkedList<Character> generateMoves(Point player, Point goal){
+public LinkedList<Character> generateMoves(Point player, Point goal, Orientation playerOrientation){
   LinkedList<Character> moves = new LinkedList<Character>();
   //two cases
   char currentDirection = player.getValue();
