@@ -13,7 +13,7 @@ public class Map {
       int x,y;
       for( x=0; x < 5; x++ ) {
          for( y=0; y < 5; y++ ) {
-            System.out.println("Creating new vertex " + new Point(x, y, view[y][x]));
+            // System.out.println("Creating new vertex " + new Point(x, y, view[y][x]));
             this.verticies.add(new Point(x, y, view[y][x]));
          }
       }
@@ -32,7 +32,6 @@ public class Map {
       }
 
       initBoundary();
-      System.out.println("Length of vertexes is : " + this.verticies.size());
    }
 
    public void update(char[][] view, Point center, Orientation o) {
@@ -57,13 +56,11 @@ public class Map {
             Point existingV = containsPointAtSameLocation(p);
             if (existingV != null) {
                //only update the vertex's data
-               System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[y][x]);
-               // System.out.println("Updating Vertex: " + existingV);
+               // System.out.println("Found Existing " + existingV.getValue() + " " + relX + "," + relY + " - Want to place (" + x + "," + y + ")" +  updatedView[y][x]);
                existingV.setValue(updatedView[y][x]);
-               // System.out.println("Gave ^^ " + String.valueOf(updatedView[x][y]));
             } else {
                //add a new vertex
-               System.out.println("New Vertex: " + p);
+               // System.out.println("New Vertex: " + p);
                this.verticies.add(p);
                newVerticies.add(p);
             }
