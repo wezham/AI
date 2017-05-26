@@ -28,7 +28,7 @@ public class Agent {
    //represents the absolute orientation of the agent (NSEW)
    private Orientation orientation;
    private Map map;
-   private Vertex currentVertex;
+   private Point currentVertex;
 
    public char get_action( char view[][] ) {
      char move = 'F';
@@ -63,9 +63,9 @@ public class Agent {
 
    //only called if not the first action, meaning that currentState.point != null
    //given a move to make, caluclates the absolute center position of the new state
-   private Vertex newVertexCalc(char[][] view, char action) {
+   private Point newVertexCalc(char[][] view, char action) {
       //if we arent moving, the center remains the same
-      Vertex newVertex = currentVertex;
+      Point newVertex = currentVertex;
       int x = currentVertex.getX();
       int y = currentVertex.getY();
       char absOrientation = orientation.getOrientation();
