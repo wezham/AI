@@ -18,6 +18,7 @@ public class Agent {
    private Point currentVertex;
    private PathPlanner pathPlanner;
    private Search search;
+   private LinkedList<Character> pathToTake;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -28,6 +29,7 @@ public class Agent {
         //if it is our first move
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
+        pathToTake = new LinkedList<Character>();
         this.map = new Map(view);
         this.search = new Search(this.map);
         // map.print();
@@ -49,7 +51,7 @@ public class Agent {
       System.out.println("Making Move: " + String.valueOf(move));
       System.out.println("New center: " + currentVertex);
 
-      return 'F';
+      return pathToTake.pollFirst();
    }
 
    private LinkedList<Character> moves = new LinkedList<Character>();
@@ -60,11 +62,8 @@ public class Agent {
      LinkedList<Point> boundaryPoints = this.map.getBoundaries();
 
      Point first = boundaryPoints.poll();
-     LinkedList<Point> res = this.search.aStar(player, first);
-     System.out.println("res");
-     for(Point p : res){
-       System.out.println(p.toString());
-     }
+     pathToTake = this.search.aStar(player, first, orientation);
+
    }
 
 

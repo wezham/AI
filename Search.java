@@ -6,7 +6,7 @@ public class Search {
     this.map = map;
   }
 
-  public LinkedList<Point> aStar(Point a, Point b){
+  public LinkedList<Character> aStar(Point a, Point b, Orientation o){
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();
@@ -25,7 +25,7 @@ public class Search {
       for(Point aj : adjNodes){
         if(aj.equals(b)){
           aj.setPrevious(curr);
-          return generatePath(aj);
+          return generatePath(aj, o);
         }
         int x = closedList.indexOf(aj);
         int y = openListCheck.indexOf(aj);
@@ -45,17 +45,20 @@ public class Search {
       }
       closedList.add(curr);
     }
-    return generatePath(b);
+    return generatePath(b, o);
   }
 
-  private LinkedList<Point> generatePath(Point b){
+  private LinkedList<Character> generatePath(Point b, Orientation o){
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();
     while((goal.getParentPoint()) != null){
       path.addFirst(goal);
       goal = goal.getParentPoint();
     }
-    return path;
+    path.addFirst(goal);
+
+    PathPlanner pathPlanner = new PathPlanner();
+    return pathPlanner.generatePath(path, o);
   }
 
   // For calculating hCost subject to change I guess

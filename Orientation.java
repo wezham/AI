@@ -2,11 +2,15 @@
 import java.util.*;
 import java.io.*;
 
-public class Orientation {
+public class Orientation{
 
   //gets given ^, >, < , v
   public Orientation() {
     this.orientation = 'N';
+  }
+
+  public Orientation(Orientation o) {
+    this.orientation = o.getOrientation();
   }
 
   public void updateOrientation(char move) {
@@ -27,7 +31,7 @@ public class Orientation {
                this.orientation = 'N';
          }break;
        case 'R':
-         switch (move) {
+         switch (this.orientation) {
             case 'N':
             System.out.println("Changed orientation from N to E");
                this.orientation = 'E';break;
@@ -136,6 +140,29 @@ public class Orientation {
        }
     }
     return newView;
+  }
+
+  //returns
+  public boolean facing(Point current, Point next) {
+    boolean facing = false;
+    System.out.println("Currently facing " + this.orientation);
+    switch (this.orientation) {
+       case 'N':
+         facing = current.getY() == (next.getY() +1);
+         System.out.println("Current y " + current.getY() + " Next y " +next.getY());
+         break;
+       case 'E':
+         facing = (current.getX() +1) == next.getY();
+         break;
+       case 'W':
+         facing = (current.getX() -1) == next.getX();
+         break;
+       default:
+         facing = (current.getY()+1) == next.getY();
+         break;
+    }
+    System.out.println("Facing " + facing);
+    return facing;
   }
 
   void print_view( char view[][] )
