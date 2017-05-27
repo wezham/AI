@@ -99,11 +99,11 @@ public class Point {
 
    // Debugging
    public String toString() {
-      //turn list into string
+      // turn list into string
       String s = "";
-      // for(Point p : this.neighbours) {
-      //     s += " (" + p.getX() + "," + p.getY() + ") ";
-      // }
+      for(Point p : this.neighbours) {
+          s += " (" + p.getX() + "," + p.getY() + ") ";
+      }
       return this.getValue() + " (" + this.getX() + "," + this.getY() + ")" + " - neighbours: " + s;
     }
 

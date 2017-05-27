@@ -7,6 +7,7 @@ public class Search {
   }
 
   public LinkedList<Character> aStar(Point a, Point b, Orientation o){
+    System.out.println("Finding Path from " + a + " to " + b);
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();

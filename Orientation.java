@@ -13,36 +13,36 @@ public class Orientation{
     this.orientation = o.getOrientation();
   }
 
-  public void updateOrientation(char move) {
+  public void updateOrientation(char move, Point currentVertex) {
     switch (move) {
        case 'L':
          switch (this.orientation) {
             case 'N':
-            System.out.println("Changed orientation from N to W");
+               currentVertex.setValue('W');
                this.orientation = 'W';break;
             case 'W':
-            System.out.println("Changed orientation from W to S");
+               currentVertex.setValue('S');
                this.orientation = 'S';break;
             case 'S':
-                System.out.println("Changed orientation from S to E");
+               currentVertex.setValue('E');
                this.orientation = 'E';break;
             default:
-            System.out.println("Changed orientation from E to N");
+               currentVertex.setValue('N');
                this.orientation = 'N';
          }break;
        case 'R':
          switch (this.orientation) {
             case 'N':
-            System.out.println("Changed orientation from N to E");
+               currentVertex.setValue('E');
                this.orientation = 'E';break;
             case 'W':
-            System.out.println("Changed orientation from W to N");
+               currentVertex.setValue('N');
                this.orientation = 'N';break;
             case 'S':
-            System.out.println("Changed orientation from S to W");
+               currentVertex.setValue('W');
                this.orientation = 'W';break;
             default:
-            System.out.println("Changed orientation from E to S");
+               currentVertex.setValue('S'); 
                this.orientation = 'S';
          }break;
     }
@@ -57,21 +57,21 @@ public class Orientation{
 
     switch (this.orientation) {
        case 'S':
-          System.out.println("facing South changing: ");
+          // System.out.println("facing South changing: ");
           newView = rotateMapRight(oldView, 2);
           break;
        case 'W':
-          System.out.println("facing West changing: ");
+          // System.out.println("facing West changing: ");
           newView = rotateMapRight(oldView, 3);
           break;
        case 'E':
-          System.out.println("facing EAST changing: ");
+          // System.out.println("facing EAST changing: ");
           newView = rotateMapRight(oldView, 1);
           break;
        default:
           return oldView;
     }
-    print_view(newView);
+    // print_view(newView);
     return newView;
   }
 
@@ -145,7 +145,7 @@ public class Orientation{
   //returns
   public boolean facing(Point current, Point next) {
     boolean facing = false;
-    System.out.println("Currently facing " + this.orientation);
+    // System.out.println("Currently facing " + this.orientation);
     switch (this.orientation) {
        case 'N':
          facing = current.getY() == (next.getY() +1);
@@ -161,7 +161,7 @@ public class Orientation{
          facing = (current.getY()+1) == next.getY();
          break;
     }
-    System.out.println("Facing " + facing);
+    // System.out.println("Facing " + facing);
     return facing;
   }
 

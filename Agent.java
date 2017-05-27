@@ -22,6 +22,7 @@ public class Agent {
 
    public char get_action( char view[][] ) {
      char move = 'L';
+     System.out.println("Current center: " + currentVertex);
 
      //FIRST THING IS UPDATE THE MAP
 
@@ -32,26 +33,30 @@ public class Agent {
         pathToTake = new LinkedList<Character>();
         this.map = new Map(view);
         this.search = new Search(this.map);
-        // map.print();
+        map.print();
         currentVertex = map.findVertexByCoordinates(2,2);
-        get_actions(currentVertex);
         move = 'L';
+        // get_actions(currentVertex);
       } else {
         map.update(view, currentVertex, orientation);
-        // map.print();
+        map.print();
+      }
+
+      if (pathToTake.size() == 0) {
+         get_actions(currentVertex);
       }
 
       counter ++;
-
+      move = pathToTake.pollFirst();
       //update orientation once weve decided our move
-      orientation.updateOrientation(move);
+      orientation.updateOrientation(move, currentVertex);
 
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
-      System.out.println("Making Move: " + String.valueOf(move));
+      System.out.println("Making Move: " + move);
       System.out.println("New center: " + currentVertex);
 
-      return pathToTake.pollFirst();
+      return move;
    }
 
    private LinkedList<Character> moves = new LinkedList<Character>();
@@ -60,8 +65,11 @@ public class Agent {
      //Our point
      Point player = playerPos;
      LinkedList<Point> boundaryPoints = this.map.getBoundaries();
-
-     Point first = boundaryPoints.poll();
+     System.out.println("Printing Boundaries before popping");
+     for (Point p : boundaryPoints) {
+        System.out.println(p);
+     }
+     Point first = boundaryPoints.peek();
      pathToTake = this.search.aStar(player, first, orientation);
 
    }

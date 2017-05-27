@@ -17,7 +17,7 @@ public class PathPlanner {
     LinkedList<Character> moves = new LinkedList<Character>();
 
     while( next != null) {
-      System.out.println("Moving from " + current + " to " + next);
+      // System.out.println("Moving from " + current + " to " + next);
       //while we arent facing the goal, turn until we are
       while(!variableO.facing(current, next)) {
         variableO.updateOrientation('R');
