@@ -35,7 +35,7 @@ public class Map {
          }
       }
 
-      initBoundary();
+      setBoundary();
    }
 
    public LinkedList<Point> getBoundaries(){
@@ -46,13 +46,13 @@ public class Map {
 
       char[][] updatedView = o.orientToNorth(view);
 
-      print_view(updatedView);
+      // print_view(updatedView);
 
       // loop through point in our view
       int x,y;
       //keep a list of newly created verticies to connect appropriately afterward
       LinkedList<Point> newVerticies = new LinkedList<Point>();
-      System.out.println("Current center: " + center);
+      // System.out.println("Current center: " + center);
 
       for( y=0; y < 5; y++ ) {
          for( x=0; x < 5; x++ ) {
@@ -60,10 +60,7 @@ public class Map {
             int relX = x + center.getX() - 2;
             int relY = y + center.getY() - 2;
             char value = updatedView[y][x];
-            //add the players direction char in
-            if (x == center.getX() && y == center.getY()) {
-               value = o.playerCharacter();
-            }
+
             Point p = new Point(relX, relY, value);
             //if we have seen a vertex with this point before
             Point existingV = containsPointAtSameLocation(p);
@@ -71,12 +68,14 @@ public class Map {
                existingV.setValue(value);
             } else {
                //add a new vertex
-               // System.out.println("New Vertex: " + p);
+              //  System.out.println("New Vertex: " + p);
                this.verticies.add(p);
                newVerticies.add(p);
             }
          }
       }
+
+      findVertexByCoordinates(center.getX(), center.getY()).setValue(o.playerCharacter());
 
       // created edges between newly created verticies (which are new boundaries) and
       //old boundaries
@@ -84,23 +83,20 @@ public class Map {
          switch(o.getOrientation()) {
             case 'N':
                //look for vert where new boundary y - old boundary y = 1
-               oldToNewBoundaryMatch(0, 1, newVerticies, this.boundary);
                newToNewBoundaryMatch(1, 0, newVerticies);
             break;
             case 'S':
                //look for vert where old boundary y - new boundary y = -1
-               oldToNewBoundaryMatch(0, 1, this.boundary, newVerticies);
                newToNewBoundaryMatch(1, 0, newVerticies);
             break;
             case 'E':
                //look for vert where new boundary x - old boundary x = 1
-               oldToNewBoundaryMatch(1, 0, newVerticies, this.boundary);
                newToNewBoundaryMatch(0, 1, newVerticies);
             break;
             default:
-               oldToNewBoundaryMatch(1, 0, this.boundary, newVerticies);
                newToNewBoundaryMatch(0, 1, newVerticies);
          }
+         oldToNewBoundaryMatch(newVerticies, this.boundary);
       }
    }
 
@@ -108,46 +104,22 @@ public class Map {
    //searches for pairs btw old and new boundaries with the x and y differences passed as params
    // eg. when adding new boundaries to the north of us, look for vert where new boundary y - old boundary y = 1
    //params are in form: new - old = k;
-   private void oldToNewBoundaryMatch(int xDiff, int yDiff, LinkedList<Point> newBoundaries, LinkedList<Point> oldBoundaries) {
-
-      //used to delete from boundary after we are finished
-      LinkedList<Point> toAddToBoundary = new LinkedList<Point>();
+   private void oldToNewBoundaryMatch(LinkedList<Point> newBoundaries, LinkedList<Point> oldBoundaries) {
 
       for(Point oldB : oldBoundaries) {
          for(Point newB : newBoundaries) {
-            if (newB.xDistTo(oldB) == xDiff && newB.yDistTo(oldB) == yDiff) {
-               //connect the two points and remove the old from boundary
+            Boolean xDiff = Math.abs(newB.xDistTo(oldB)) == 1 && newB.getY() == oldB.getY();
+            Boolean yDiff = Math.abs(newB.yDistTo(oldB)) == 1 && newB.getX() == oldB.getX();
+            if (xDiff || yDiff) {
                createEdgeBtw(oldB, newB);
-               toAddToBoundary.add(newB);
-               toAddToBoundary.add(oldB);
+              //  System.out.println("Making old/new match btw " + oldB + " || " + newB);
             }
          }
       }
 
-      //add the newly created lists to the boundary set
-      for (Point p : toAddToBoundary) {
-         if (!this.boundary.contains(p)) {
-            this.boundary.add(p);
-         }
-      }
 
-
-      //delete the now no longer boundary points
-      cleanUpBoundary();
-   }
-
-   //removes elements from the boundary list that are no longer boundaries
-   public void cleanUpBoundary() {
-      LinkedList<Point> toDelete = new LinkedList<Point>();
-      for (Point p : this.boundary) {
-         if (p.numNeighbours() == 4) {
-            toDelete.add(p);
-         }
-      }
-      for (Point p : toDelete) {
-         this.boundary.remove(p);
-      }
-
+      //clean up the boundary
+      setBoundary();
    }
 
    //connects new boundaries (that need to be connected)
@@ -191,7 +163,9 @@ public class Map {
    }
 
    //initially, a boundary is anything without 4 neighbours
-   private void initBoundary() {
+   private void setBoundary() {
+      //first clear, then calculate again
+      this.boundary = new LinkedList<Point>();
       for (Point p : this.verticies) {
          if (p.numNeighbours() < 4) {
             this.boundary.add(p);
@@ -227,6 +201,13 @@ public class Map {
       }
       System.out.println("+-----+");
    }
+
+  //  Astar clear parent points
+  public void clearParentPoints(){
+    for(Point p : this.verticies){
+      p.setPrevious(null);
+    }
+  }
 
 
    private LinkedList<Point> boundary;

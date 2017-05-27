@@ -6,7 +6,9 @@ public class Search {
     this.map = map;
   }
 
-  public LinkedList<Point> aStar(Point a, Point b){
+  public LinkedList<Character> aStar(Point a, Point b, Orientation o){
+    this.map.clearParentPoints();
+    // System.out.println("Finding Path from " + a + " to " + b);
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();
@@ -25,7 +27,7 @@ public class Search {
       for(Point aj : adjNodes){
         if(aj.equals(b)){
           aj.setPrevious(curr);
-          return generatePath(aj);
+          return generatePath(aj, o);
         }
         int x = closedList.indexOf(aj);
         int y = openListCheck.indexOf(aj);
@@ -45,17 +47,20 @@ public class Search {
       }
       closedList.add(curr);
     }
-    return generatePath(b);
+    return generatePath(b, o);
   }
 
-  private LinkedList<Point> generatePath(Point b){
+  private LinkedList<Character> generatePath(Point b, Orientation o){
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();
     while((goal.getParentPoint()) != null){
       path.addFirst(goal);
       goal = goal.getParentPoint();
     }
-    return path;
+    path.addFirst(goal);
+
+    PathPlanner pathPlanner = new PathPlanner();
+    return pathPlanner.generatePath(path, o);
   }
 
   // For calculating hCost subject to change I guess
@@ -75,24 +80,6 @@ public class Search {
       default: val = 0;
     }
     return val;
-  }
-
-  // Get adj points
-  private Queue<Point> getAdjPoint(char view[][], Point cur){
-     Queue<Point> adjPoints = new LinkedList<Point>();
-     if(cur.getX() != 0){
-        adjPoints.add(new Point(cur.getX()-1, cur.getY(), view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getX() != 4){
-        adjPoints.add(new Point(cur.getX()+1, cur.getY(), view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getY() != 0){
-        adjPoints.add(new Point(cur.getX(), cur.getY() -1, view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getY() != 4){
-        adjPoints.add(new Point(cur.getX(), cur.getY() +1, view[cur.getX()][cur.getY()]));
-     }
-     return adjPoints;
   }
 
   private Comparator<Point> pointComparator = new Comparator<Point>(){
