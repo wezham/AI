@@ -68,7 +68,7 @@ public class Agent {
     //     System.out.println(p);
     //  }
      Point first = boundaryPoints.peek();
-     System.out.println("calling astar");
+     System.out.println("calling astar from "+player+" to "+first+"");
      pathToTake = this.search.aStar(player, first, orientation);
 
    }

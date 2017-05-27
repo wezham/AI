@@ -58,6 +58,10 @@ public class Search {
       goal = goal.getParentPoint();
     }
     path.addFirst(goal);
+    System.out.println("Astar Point Path:");
+    for(Point p : path){
+      System.out.println(p.toString());
+    }
 
     PathPlanner pathPlanner = new PathPlanner();
     return pathPlanner.generatePath(path, o);
