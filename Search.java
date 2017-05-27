@@ -6,7 +6,7 @@ public class Search {
     this.map = map;
   }
 
-  public LinkedList<Character> aStar(Point a, Point b, Orientation o){
+  public LinkedList<Point> aStar(Point a, Point b, Orientation o){
     this.map.clearParentPoints();
     // System.out.println("Finding Path from " + a + " to " + b);
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
@@ -50,7 +50,7 @@ public class Search {
     return generatePath(b, o);
   }
 
-  private LinkedList<Character> generatePath(Point b, Orientation o){
+  private LinkedList<Point> generatePath(Point b, Orientation o){
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();
     while((goal.getParentPoint()) != null){
@@ -58,13 +58,11 @@ public class Search {
       goal = goal.getParentPoint();
     }
     path.addFirst(goal);
-    System.out.println("Astar Point Path:");
-    for(Point p : path){
-      System.out.println(p.toString());
-    }
-
-    PathPlanner pathPlanner = new PathPlanner();
-    return pathPlanner.generatePath(path, o);
+    // System.out.println("Astar Point Path:");
+    // for(Point p : path){
+    //   System.out.println(p.toString());
+    // }
+    return path;
   }
 
   // For calculating hCost subject to change I guess

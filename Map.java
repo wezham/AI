@@ -42,6 +42,10 @@ public class Map {
      return this.boundary;
    }
 
+  //  public LinkedList<Point> getGoodBoundaries(){
+  //    for()/
+  //  }
+
    public void update(char[][] view, Point center, Orientation o) {
 
       char[][] updatedView = o.orientToNorth(view);

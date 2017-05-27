@@ -19,10 +19,11 @@ public class Agent {
    private PathPlanner pathPlanner;
    private Search search;
    private LinkedList<Character> pathToTake;
+   private LinkedList<Point> exploredBoundaries;
 
    public char get_action( char view[][] ) {
      char move = 'L';
-     System.out.println("Current center: " + currentVertex);
+    //  System.out.println("Current center: " + currentVertex);
 
      //FIRST THING IS UPDATE THE MAP
 
@@ -30,6 +31,7 @@ public class Agent {
         //if it is our first move
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
+        this.exploredBoundaries = new LinkedList<Point>();
         pathToTake = new LinkedList<Character>();
         this.map = new Map(view);
         this.search = new Search(this.map);
@@ -51,8 +53,8 @@ public class Agent {
 
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
-      System.out.println("Making Move: " + move);
-      // System.out.println("New center: " + currentVertex);
+      // System.out.println("Making Move: " + move);
+
 
       return move;
    }
@@ -63,18 +65,50 @@ public class Agent {
      //Our point
      Point player = playerPos;
      LinkedList<Point> boundaryPoints = this.map.getBoundaries();
-    //  System.out.println("Printing Boundaries before popping");
-    //  for (Point p : boundaryPoints) {
-    //     System.out.println(p);
-    //  }
-     Point first = boundaryPoints.peek();
-     System.out.println("calling astar from "+player+" to "+first+"");
-     pathToTake = this.search.aStar(player, first, orientation);
+     LinkedList<Point> path = new LinkedList<Point>();
+     ListIterator<Point> it = boundaryPoints.listIterator();
+
+     //set the first end point to the first element of the iterator
+     Point mayExplore = it.next();
+
+     //search for the first path
+     path = this.search.aStar(player, mayExplore, orientation);
+     //
+
+     for(Point p : map.getBoundaries()) {
+       System.out.println("Boundary: " + p);
+     }
+
+     while((containsBlockers(path) || exploredBoundaries.contains(mayExplore)) && it.hasNext()){
+       if(containsBlockers(path)) {
+         System.out.println("Bad End Goal (contains blockers) => " + mayExplore);
+       } else {
+         System.out.println("Bad End Goal (seen) => " + mayExplore);
+       }
+       mayExplore = it.next();
+       path = this.search.aStar(player, mayExplore, orientation);
+     }
+     if(path.size() > 0 && !containsBlockers(path)){
+        pathToTake = pathPlanner.generatePath(path, orientation);
+        this.exploredBoundaries.add(mayExplore);
+        System.out.println("Explored => "  + mayExplore);
+     }
 
    }
 
-
-
+   private boolean containsBlockers(LinkedList<Point> path){
+     boolean val = false;
+     for(Point p : path){
+       switch(p.getValue()){
+         case('T'): val = true ;break;
+         case('-'): val = true ;break;
+         case('*'): val = true ;break;
+         case('~'): val = true ;break;
+         default: val = false;
+       }
+     }
+    return val;
+   }
    //only called if not the first action, meaning that currentState.point != null
    //given a move to make, caluclates the absolute center position of the new state
    private Point newVertexCalc(char[][] view, char action) {
@@ -163,7 +197,7 @@ public class Agent {
                   }
                }
             }
-            agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
+            // agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
             action = agent.get_action( view );
             out.write( action );
          }
