@@ -23,7 +23,7 @@ public class Orientation{
             case 'W':
                direction = 'S';break;
             case 'S':
-              direction = 'E';break;
+               direction = 'E';break;
             default:
                direction = 'N';
          }break;
@@ -39,10 +39,10 @@ public class Orientation{
                direction = 'S';
          }break;
     }
-    if(currentVertex != null){
-        currentVertex.setValue(direction);
-    }
     this.orientation = direction;
+    if(currentVertex != null){
+        currentVertex.setValue(this.playerCharacter());
+    }
   }
 
   //given a view and an orientation, realigns the orientation of the view as would be seen
@@ -145,17 +145,16 @@ public class Orientation{
     // System.out.println("Currently facing " + this.orientation);
     switch (this.orientation) {
        case 'N':
-         facing = current.getY() == (next.getY() +1);
-         System.out.println("Current y " + current.getY() + " Next y " +next.getY());
+         facing = ((current.getY()-1) == next.getY());
          break;
        case 'E':
-         facing = (current.getX() +1) == next.getY();
+         facing = ((current.getX()+1) == next.getX());
          break;
        case 'W':
-         facing = (current.getX() -1) == next.getX();
+         facing = ((current.getX()-1) == next.getX());
          break;
        default:
-         facing = (current.getY()+1) == next.getY();
+         facing = ((current.getY()+1) == next.getY());
          break;
     }
     // System.out.println("Facing " + facing);

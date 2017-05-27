@@ -101,10 +101,10 @@ public class Point {
    public String toString() {
       // turn list into string
       String s = "";
-      for(Point p : this.neighbours) {
-          s += " (" + p.getX() + "," + p.getY() + ") ";
-      }
-      return this.getValue() + " (" + this.getX() + "," + this.getY() + ")" + " - neighbours: " + s;
+      // for(Point p : this.neighbours) {
+      //     s += " (" + p.getX() + "," + p.getY() + ") ";
+      // }
+      return this.getValue() + " (" + this.getX() + "," + this.getY() + ")"; //+ " - neighbours: " + s;
     }
 
 

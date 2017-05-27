@@ -52,7 +52,7 @@ public class Map {
       int x,y;
       //keep a list of newly created verticies to connect appropriately afterward
       LinkedList<Point> newVerticies = new LinkedList<Point>();
-      System.out.println("Current center: " + center);
+      // System.out.println("Current center: " + center);
 
       for( y=0; y < 5; y++ ) {
          for( x=0; x < 5; x++ ) {
@@ -68,7 +68,7 @@ public class Map {
                existingV.setValue(value);
             } else {
                //add a new vertex
-               System.out.println("New Vertex: " + p);
+              //  System.out.println("New Vertex: " + p);
                this.verticies.add(p);
                newVerticies.add(p);
             }
@@ -112,7 +112,7 @@ public class Map {
             Boolean yDiff = Math.abs(newB.yDistTo(oldB)) == 1 && newB.getX() == oldB.getX();
             if (xDiff || yDiff) {
                createEdgeBtw(oldB, newB);
-               System.out.println("Making old/new match btw " + oldB + " || " + newB);
+              //  System.out.println("Making old/new match btw " + oldB + " || " + newB);
             }
          }
       }
@@ -201,6 +201,13 @@ public class Map {
       }
       System.out.println("+-----+");
    }
+
+  //  Astar clear parent points
+  public void clearParentPoints(){
+    for(Point p : this.verticies){
+      p.setPrevious(null);
+    }
+  }
 
 
    private LinkedList<Point> boundary;

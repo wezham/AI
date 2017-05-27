@@ -7,7 +7,8 @@ public class Search {
   }
 
   public LinkedList<Character> aStar(Point a, Point b, Orientation o){
-    System.out.println("Finding Path from " + a + " to " + b);
+    this.map.clearParentPoints();
+    // System.out.println("Finding Path from " + a + " to " + b);
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();
@@ -79,24 +80,6 @@ public class Search {
       default: val = 0;
     }
     return val;
-  }
-
-  // Get adj points
-  private Queue<Point> getAdjPoint(char view[][], Point cur){
-     Queue<Point> adjPoints = new LinkedList<Point>();
-     if(cur.getX() != 0){
-        adjPoints.add(new Point(cur.getX()-1, cur.getY(), view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getX() != 4){
-        adjPoints.add(new Point(cur.getX()+1, cur.getY(), view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getY() != 0){
-        adjPoints.add(new Point(cur.getX(), cur.getY() -1, view[cur.getX()][cur.getY()]));
-     }
-     if(cur.getY() != 4){
-        adjPoints.add(new Point(cur.getX(), cur.getY() +1, view[cur.getX()][cur.getY()]));
-     }
-     return adjPoints;
   }
 
   private Comparator<Point> pointComparator = new Comparator<Point>(){
