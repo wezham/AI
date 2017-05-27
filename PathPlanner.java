@@ -20,7 +20,7 @@ public class PathPlanner {
       // System.out.println("Moving from " + current + " to " + next);
       //while we arent facing the goal, turn until we are
       while(!variableO.facing(current, next)) {
-        variableO.updateOrientation('R');
+        variableO.updateOrientation('R', null);
         moves.add('R');
       }
       //move forward to land at goal

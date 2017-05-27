@@ -14,38 +14,35 @@ public class Orientation{
   }
 
   public void updateOrientation(char move, Point currentVertex) {
+    char direction = this.orientation;
     switch (move) {
        case 'L':
          switch (this.orientation) {
             case 'N':
-               currentVertex.setValue('W');
-               this.orientation = 'W';break;
+               direction = 'W'; break;
             case 'W':
-               currentVertex.setValue('S');
-               this.orientation = 'S';break;
+               direction = 'S';break;
             case 'S':
-               currentVertex.setValue('E');
-               this.orientation = 'E';break;
+              direction = 'E';break;
             default:
-               currentVertex.setValue('N');
-               this.orientation = 'N';
+               direction = 'N';
          }break;
        case 'R':
          switch (this.orientation) {
             case 'N':
-               currentVertex.setValue('E');
-               this.orientation = 'E';break;
+               direction = 'E';break;
             case 'W':
-               currentVertex.setValue('N');
-               this.orientation = 'N';break;
+               direction = 'N';break;
             case 'S':
-               currentVertex.setValue('W');
-               this.orientation = 'W';break;
+               direction = 'W';break;
             default:
-               currentVertex.setValue('S'); 
-               this.orientation = 'S';
+               direction = 'S';
          }break;
     }
+    if(currentVertex != null){
+        currentVertex.setValue(direction);
+    }
+    this.orientation = direction;
   }
 
   //given a view and an orientation, realigns the orientation of the view as would be seen
