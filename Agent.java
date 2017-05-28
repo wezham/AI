@@ -48,10 +48,11 @@ public class Agent {
 
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
+      //remove any tools or trees from our list if we aquire them or cut tree
+      map.removeIfAcquired(currentVertex);
+      //
       this.exploredPoints.add(currentVertex);
       // System.out.println("Making Move: " + move);
-
-
       return move;
    }
 
@@ -69,86 +70,34 @@ public class Agent {
      //search for the first path
      path = this.search.aStar(player, mayExplore, orientation);
 
-
      while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
        mayExplore = it.next();
        path = this.search.aStar(player, mayExplore, orientation);
      }
      if(path.size() > 0 && !containsBlockers(path)){
         pathToTake = pathPlanner.generatePath(path, orientation);
-        System.out.println("Explored from 1 => "  + mayExplore);
      } else {
         //get list of points with neighbours that are obstacles
         PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
         mayExplore = pointsNextToObs.poll();
-        System.out.println(mayExplore);
         path = this.search.aStar(player, mayExplore, orientation);
         while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && (pointsNextToObs.peek() != null)){
          //  map.print();
           path = this.search.aStar(player, mayExplore, orientation);
-          System.out.println("Just generate path for" + mayExplore);
-          if(containsBlockers(path)){
-              System.out.println("Path to "+mayExplore+" cts blockers");
-          }
-          if(exploredPoints.contains(mayExplore)){
-              System.out.println("Explored "+mayExplore+" already");
-          }
           mayExplore = pointsNextToObs.poll();
-
         }
-
-        if (pointsNextToObs.peek() == null) {
-           System.out.println("Empty queue");
-        }
-        if (!containsBlockers(path)) {
-           System.out.println("Path empty");
-        }
-        if (!exploredPoints.contains(mayExplore)) {
-           System.out.println("Contains pt");
-        }
-
-        System.out.println("Path"+ path);
         if(path.size() > 0 && !containsBlockers(path)){
           pathToTake = pathPlanner.generatePath(path, orientation);
-          System.out.println("Explored a obstacle adj point => "  + mayExplore);
        }else{
-
+         System.out.println(this.map.trees());
+         System.out.println(this.map.keys());
+         System.out.println(this.map.dynamites());
+         System.out.println(this.map.axes());
+         System.out.println(this.map.treasure());
+         System.out.println("Now lets act bitccccchhhhh");
        }
 
      }
-   //   } else {
-     //
-   //      //if we enter here, we have explored all the boundariees. Now explore points surronded by obsticles
-   //
-   //    //
-   //    //   while(p != null) {
-   //    //      System.out.println(p + " " + p.numObstacleNeighbours());
-   //    //      p = pointsNextToObs.poll();
-   //      //
-   //    //   }
-     //
-   //      System.out.println("~~~~~~~~~~~~No more boundaries~~~~~~~~~~~~~~~~");
-     //
-   //      System.out.println(pointsNextToObs);
-     //
-   //      mayExplore = pointsNextToObs.poll();
-   //      path = this.search.aStar(player, mayExplore, orientation);
-   //      System.out.println("Popping off queue => " + mayExplore + "numObstacle" + mayExplore.numObstacleNeighbours());
-     //
-   //      while(mayExplore != null && containsBlockers(path)) {
-   //         mayExplore = pointsNextToObs.poll();
-   //         path = this.search.aStar(player, mayExplore, orientation);
-   //         pathToTake = pathPlanner.generatePath(path, orientation);
-   //         System.out.println("Popping off queue => " + mayExplore);
-   //      }
-     //
-   //      System.out.println("Explored from 2 "+ mayExplore);
-     //
-   //   }
-
-
-
-
    }
 
    private boolean containsBlockers(LinkedList<Point> path){

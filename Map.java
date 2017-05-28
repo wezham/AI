@@ -10,6 +10,11 @@ public class Map {
       //initialize
       this.verticies = new LinkedList<Point>();
       this.boundary = new LinkedList<Point>();
+      this.axes = new LinkedList<Point>();
+      this.keys = new LinkedList<Point>();
+      this.dynamites = new LinkedList<Point>();
+      this.trees = new LinkedList<Point>();
+
       this.pointsNextToObsticles = new PriorityQueue<Point>(40, this.neighbourComparator);
       //create verticies
       int x,y;
@@ -17,11 +22,9 @@ public class Map {
          for( y=0; y < 5; y++ ) {
             char value = view[y][x];
             //add the players direction char in
-            if (x == 2 && y == 2) {
-               value = '^';
-            }
-
+            if (x == 2 && y == 2) { value = '^'; } //set player pos first time round
             Point p = new Point(x, y, value);
+            addIfUseful(p);
             this.verticies.add(p);
          }
       }
@@ -40,6 +43,23 @@ public class Map {
       }
 
       setBoundary();
+   }
+
+   //Get valuable information lists and points
+   public LinkedList<Point> trees(){
+     return this.trees;
+   }
+   public LinkedList<Point> axes(){
+     return this.axes;
+   }
+   public LinkedList<Point> dynamites(){
+     return this.dynamites;
+   }
+   public LinkedList<Point> keys(){
+     return this.keys;
+   }
+   public Point treasure(){
+     return this.treasure;
    }
 
    public PriorityQueue<Point> setAndGetObstaclePoints(){
@@ -79,6 +99,49 @@ public class Map {
      }
    }
 
+   private void addIfUseful(Point p) {
+     switch(p.getValue()){
+       case('d'): this.dynamites.add(p);break;
+       case('$'): this.treasure = p;break;
+       case('k'): this.keys.add(p);break;
+       case('a'): this.axes.add(p);break;
+       case('T'): this.trees.add(p);break;
+       default: ;
+     }
+   }
+
+   public void removeIfAcquired(Point currentP) {
+     Point toRemove = null;
+     for (Point p2 : this.dynamites) {
+       if (currentP.sameLocationAs(p2)) {
+          toRemove = p2 ;
+          break;
+       }
+     }
+     if (toRemove != null) {this.dynamites.remove(toRemove);}
+     for (Point p2 : this.keys) {
+       if (currentP.sameLocationAs(p2)) {
+          toRemove = p2 ;
+          break;
+       }
+     }
+     if (toRemove != null) {this.keys.remove(toRemove);}
+     for (Point p2 : this.axes) {
+       if (currentP.sameLocationAs(p2)) {
+          toRemove = p2 ;
+          break;
+       }
+     }
+     if (toRemove != null) {this.axes.remove(toRemove);}
+     for (Point p2 : this.trees) {
+       if (currentP.sameLocationAs(p2)) {
+          toRemove = p2 ;
+          break;
+       }
+     }
+     if (toRemove != null) {this.trees.remove(toRemove);}
+   }
+
    public void update(char[][] view, Point center, Orientation o) {
 
       char[][] updatedView = o.orientToNorth(view);
@@ -108,6 +171,7 @@ public class Map {
               //  System.out.println("New Vertex: " + p);
                this.verticies.add(p);
                newVerticies.add(p);
+               addIfUseful(p);
             }
          }
       }
@@ -257,4 +321,9 @@ public class Map {
    private PriorityQueue<Point> pointsNextToObsticles;
    private LinkedList<Point> boundary;
    private LinkedList<Point> verticies;
+   private LinkedList<Point> axes;
+   private LinkedList<Point> dynamites;
+   private LinkedList<Point> keys;
+   private LinkedList<Point> trees;
+   private Point treasure;
 }
