@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 public class Agent {
 
    private Integer counter = 0;
-   //represents the absolute orientation of the agent (NSEW)
+   private LinkedList<Character> moves = new LinkedList<Character>();
    private Orientation orientation;
    private Map map;
    private Point currentVertex;
@@ -16,6 +16,7 @@ public class Agent {
    private LinkedList<Character> pathToTake;
    private LinkedList<Point> exploredPoints;
    private boolean gottenTreasure;
+   private HashMap<Character, Integer> toolkit;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -30,6 +31,7 @@ public class Agent {
      if (counter == 0) {
         //if it is our first move
         gottenTreasure = false;
+        initToolkit();
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
         this.exploredPoints = new LinkedList<Point>();
@@ -55,15 +57,22 @@ public class Agent {
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
 
+      //add tools to toolkit if aquired
+      addToToolKitIfUseful(currentVertex);
+
+      //based on what we are about to do, update toolkit
+      updateToolKit(move);
+
       //remove any tools or trees from our list if we aquire them or cut tree
       map.removeIfAcquired(currentVertex);
       //
       this.exploredPoints.add(currentVertex);
       // System.out.println("Making Move: " + move);
+
+
+
       return move;
    }
-
-   private LinkedList<Character> moves = new LinkedList<Character>();
 
    private void get_actions(Point playerPos){
      //Our point
@@ -106,6 +115,23 @@ public class Agent {
 
    }
 
+   private void updateToolKit(char move) {
+      switch(move){
+       case('B'): removeToolFromToolkit('d');break;
+       case('C'): addToolToToolkit('r');break;
+       default: ;
+     }
+   }
+
+   private void addToToolKitIfUseful(Point p) {
+     switch(p.getValue()){
+       case('d'): addToolToToolkit('d');System.out.println("Found Dyno");break;
+       case('k'): addToolToToolkit('k');System.out.println("Found Key");break;
+       case('a'): addToolToToolkit('a');;System.out.println("Found Axe");break;
+       default: ;
+     }
+   }
+
    private void getTreasure(){
      System.out.println(this.map.trees());
      System.out.println(this.map.keys());
@@ -117,6 +143,7 @@ public class Agent {
        if(path.size() > 0){
          pathToTake = pathPlanner.generatePath(path, orientation);
          gottenTreasure = true;
+         System.out.println(toolkit.values());
        }
      }
    }
@@ -147,6 +174,30 @@ public class Agent {
        default: return false;
      }
   }
+
+ private void addToolToToolkit(char c) {
+    int count = this.toolkit.get(c);
+    this.toolkit.put(c, (count + 1));
+ }
+
+ private int getToolCount(char c) {
+    return this.toolkit.get(c);
+}
+
+ private void removeToolFromToolkit(char c) {
+    if (this.toolkit.get(c) == 0) {
+   }
+    int count = this.toolkit.get(c);
+    this.toolkit.put(c, count - 1);
+ }
+
+ private void initToolkit() {
+     this.toolkit = new HashMap<Character, Integer>();
+     this.toolkit.put('a', 0);
+     this.toolkit.put('d', 0);
+     this.toolkit.put('k', 0);
+     this.toolkit.put('r', 0);
+}
 
    //only called if not the first action, meaning that currentState.point != null
    //given a move to make, caluclates the absolute center position of the new state
