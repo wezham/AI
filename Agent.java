@@ -15,6 +15,7 @@ public class Agent {
    private Search search;
    private LinkedList<Character> pathToTake;
    private LinkedList<Point> exploredPoints;
+   private boolean gottenTreasure;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -22,8 +23,13 @@ public class Agent {
 
      //FIRST THING IS UPDATE THE MAP
 
+     if(gottenTreasure && (pathToTake.size() == 0)) {
+       returnFromGoal();
+     }
+
      if (counter == 0) {
         //if it is our first move
+        gottenTreasure = false;
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
         this.exploredPoints = new LinkedList<Point>();
@@ -48,6 +54,7 @@ public class Agent {
 
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
+
       //remove any tools or trees from our list if we aquire them or cut tree
       map.removeIfAcquired(currentVertex);
       //
@@ -66,37 +73,58 @@ public class Agent {
      LinkedList<Point> path = new LinkedList<Point>();
 
      //set the first end point to the first element of the iterator
-     Point mayExplore = it.next();
-     //search for the first path
-     path = this.search.aStar(player, mayExplore, orientation);
-
-     while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
-       mayExplore = it.next();
+     if(boundaryPoints.size() > 0){
+       Point mayExplore = it.next();
+       //search for the first path
        path = this.search.aStar(player, mayExplore, orientation);
-     }
-     if(path.size() > 0 && !containsBlockers(path)){
-        pathToTake = pathPlanner.generatePath(path, orientation);
-     } else {
-        //get list of points with neighbours that are obstacles
-        PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
-        mayExplore = pointsNextToObs.poll();
-        path = this.search.aStar(player, mayExplore, orientation);
-        while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && (pointsNextToObs.peek() != null)){
-         //  map.print();
-          path = this.search.aStar(player, mayExplore, orientation);
-          mayExplore = pointsNextToObs.poll();
-        }
-        if(path.size() > 0 && !containsBlockers(path)){
-          pathToTake = pathPlanner.generatePath(path, orientation);
-       }else{
-         System.out.println(this.map.trees());
-         System.out.println(this.map.keys());
-         System.out.println(this.map.dynamites());
-         System.out.println(this.map.axes());
-         System.out.println(this.map.treasure());
-         System.out.println("Now lets act bitccccchhhhh");
-       }
 
+       while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
+         mayExplore = it.next();
+         path = this.search.aStar(player, mayExplore, orientation);
+       }
+       if(path.size() > 0 && !containsBlockers(path)){
+          pathToTake = pathPlanner.generatePath(path, orientation);
+       } else {
+          //get list of points with neighbours that are obstacles
+          PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
+          mayExplore = pointsNextToObs.poll();
+          path = this.search.aStar(player, mayExplore, orientation);
+          while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && (pointsNextToObs.peek() != null)){
+           //  map.print();
+            path = this.search.aStar(player, mayExplore, orientation);
+            mayExplore = pointsNextToObs.poll();
+          }
+          if(path.size() > 0 && !containsBlockers(path)){
+            pathToTake = pathPlanner.generatePath(path, orientation);
+         }else{
+           getTreasure();
+         }
+       }
+     }else{
+       getTreasure();
+     }
+
+   }
+
+   private void getTreasure(){
+     System.out.println(this.map.trees());
+     System.out.println(this.map.keys());
+     System.out.println(this.map.dynamites());
+     System.out.println(this.map.axes());
+     System.out.println(this.map.treasure());
+     if(map.treasure() != null){
+       LinkedList<Point> path = this.search.aStar(currentVertex, map.treasure(), orientation);
+       if(path.size() > 0){
+         pathToTake = pathPlanner.generatePath(path, orientation);
+         gottenTreasure = true;
+       }
+     }
+   }
+
+   private void returnFromGoal(){
+      LinkedList<Point> path = this.search.aStar(currentVertex, map.findVertexByCoordinates(2,2), orientation);
+      if(path.size() > 0){
+       pathToTake = pathPlanner.generatePath(path, orientation);
      }
    }
 

@@ -1,5 +1,5 @@
 /*******************************************
- *  Raft.java 
+ *  Raft.java
  *  Engine for Text-Based Adventure Game
  *  COMP3411 Artificial Intelligence
  *  UNSW Session 1, 2017
@@ -90,6 +90,8 @@ public class Raft {
    private void print_map() {
       char ch=' ';
       int r,c;
+      String ANSI_PURPLE = "\u001B[35m";
+      String ANSI_RESET = "\u001B[0m";
 
       System.out.println();
       for( r=0; r < nrows; r++ ) {
@@ -101,11 +103,13 @@ public class Raft {
                 case SOUTH: ch = 'v'; break;
                 case WEST:  ch = '<'; break;
                }
+               System.out.print( ANSI_PURPLE+ ch + ANSI_PURPLE );
             }
             else {
               ch = map[r][c];
+              System.out.print( ANSI_RESET + ch + ANSI_RESET);
             }
-            System.out.print( ch );
+
          }
          System.out.println();
       }
