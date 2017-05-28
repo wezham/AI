@@ -1,13 +1,8 @@
-/*********************************************
- *  Agent.java
- *  Sample Agent for Text-Based Adventure Game
- *  COMP3411 Artificial Intelligence
- *  UNSW Session 1, 2017
-*/
 
-import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
+import java.util.PriorityQueue;
 
 public class Agent {
 
@@ -19,7 +14,7 @@ public class Agent {
    private PathPlanner pathPlanner;
    private Search search;
    private LinkedList<Character> pathToTake;
-   private LinkedList<Point> exploredBoundaries;
+   private LinkedList<Point> exploredPoints;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -31,7 +26,7 @@ public class Agent {
         //if it is our first move
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
-        this.exploredBoundaries = new LinkedList<Point>();
+        this.exploredPoints = new LinkedList<Point>();
         pathToTake = new LinkedList<Character>();
         this.map = new Map(view);
         this.search = new Search(this.map);
@@ -53,6 +48,7 @@ public class Agent {
 
       //update the vertex to the new point
       currentVertex = newVertexCalc(view, move);
+      this.exploredPoints.add(currentVertex);
       // System.out.println("Making Move: " + move);
 
 
@@ -73,26 +69,53 @@ public class Agent {
 
      //search for the first path
      path = this.search.aStar(player, mayExplore, orientation);
-     //
 
-     for(Point p : map.getBoundaries()) {
-       System.out.println("Boundary: " + p);
-     }
 
-     while((containsBlockers(path) || exploredBoundaries.contains(mayExplore)) && it.hasNext()){
+     while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
        if(containsBlockers(path)) {
-         System.out.println("Bad End Goal (contains blockers) => " + mayExplore);
+         // System.out.println("Bad End Goal (contains blockers) => " + mayExplore);
        } else {
-         System.out.println("Bad End Goal (seen) => " + mayExplore);
+         // System.out.println("Bad End Goal (seen) => " + mayExplore);
        }
        mayExplore = it.next();
        path = this.search.aStar(player, mayExplore, orientation);
      }
      if(path.size() > 0 && !containsBlockers(path)){
         pathToTake = pathPlanner.generatePath(path, orientation);
-        this.exploredBoundaries.add(mayExplore);
-        System.out.println("Explored => "  + mayExplore);
+        System.out.println("Explored from 1 => "  + mayExplore);
+        map.print();
+     } else {
+
+        //if we enter here, we have explored all the boundariees. Now explore points surronded by obsticles
+        PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
+      //   Point p = pointsNextToObs.poll();
+      //   while(p != null) {
+      //      System.out.println(p + " " + p.numObstacleNeighbours());
+      //      p = pointsNextToObs.poll();
+        //
+      //   }
+
+        System.out.println("~~~~~~~~~~~~No more boundaries~~~~~~~~~~~~~~~~");
+
+        System.out.println(pointsNextToObs);
+
+        mayExplore = pointsNextToObs.poll();
+        path = this.search.aStar(player, mayExplore, orientation);
+        System.out.println("Popping off queue => " + mayExplore + "numObstacle" + mayExplore.numObstacleNeighbours());
+
+        while(mayExplore != null && containsBlockers(path)) {
+           mayExplore = pointsNextToObs.poll();
+           path = this.search.aStar(player, mayExplore, orientation);
+           pathToTake = pathPlanner.generatePath(path, orientation);
+           System.out.println("Popping off queue => " + mayExplore);
+        }
+
+        System.out.println("Explored from 2 "+ mayExplore);
+
      }
+
+
+
 
    }
 
@@ -114,8 +137,7 @@ public class Agent {
        case('~'): return true;
        default: return false;
      }
-   }
-
+  }
 
    //only called if not the first action, meaning that currentState.point != null
    //given a move to make, caluclates the absolute center position of the new state

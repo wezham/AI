@@ -2,13 +2,14 @@
 import java.util.*;
 import java.io.*;
 
-public class Point {
+public class Point{
 
    public Point (Integer x, Integer y, char value) {
       this.value = value;
       this.x = x;
       this.y = y;
       this.neighbours = new LinkedList<Point>();
+      this.numObstacleNeighbours = 0;
    }
    // Setters and Getters
    public Integer getX (){
@@ -85,7 +86,12 @@ public class Point {
             contains = true;
          }
       }
-      if (!contains) {this.neighbours.add(v1);}
+      if (!contains) {
+         if(isBlocker(v1)){
+            this.numObstacleNeighbours++;
+         }
+         this.neighbours.add(v1);
+      }
    }
 
    public void printPath(){
@@ -115,6 +121,10 @@ public class Point {
        this.y = another.getY();
    }
 
+   public int numObstacleNeighbours(){
+      return this.numObstacleNeighbours;
+   }
+
 
     // Equality
    @Override
@@ -127,6 +137,16 @@ public class Point {
       }
    }
 
+    private boolean isBlocker(Point p) {
+     switch(p.getValue()){
+       case('T'): return true;
+       case('-'): return true;
+       case('*'): return true;
+       case('~'): return true;
+       default: return false;
+     }
+    }
+
    public boolean sameLocationAs(Point other) {
       return (this.x  == other.getX() && this.y == other.getY());
    }
@@ -136,4 +156,5 @@ public class Point {
    private char value;
    private Integer x;
    private Integer y;
+   private int numObstacleNeighbours;
 }

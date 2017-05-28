@@ -4,11 +4,13 @@ import java.io.*;
 
 public class Map {
 
+
    //note that the center point is at (2,2) in the view
    public Map (char[][] view) {
       //initialize
       this.verticies = new LinkedList<Point>();
       this.boundary = new LinkedList<Point>();
+      this.pointsNextToObsticles = new PriorityQueue<Point>(40, this.neighbourComparator);
       //create verticies
       int x,y;
       for( x=0; x < 5; x++ ) {
@@ -18,7 +20,9 @@ public class Map {
             if (x == 2 && y == 2) {
                value = '^';
             }
-            this.verticies.add(new Point(x, y, value));
+
+            Point p = new Point(x, y, value);
+            this.verticies.add(p);
          }
       }
 
@@ -36,6 +40,19 @@ public class Map {
       }
 
       setBoundary();
+   }
+
+   public PriorityQueue<Point> setAndGetObstaclePoints(){
+      this.pointsNextToObsticles =  new PriorityQueue<Point>(40, this.neighbourComparator);
+      for(Point p : this.verticies){
+         if(p.numObstacleNeighbours() > 0 && (p.numObstacleNeighbours() != 4) && !(isBlocker(p))){
+            this.pointsNextToObsticles.add(p);
+         }
+      }return this.pointsNextToObsticles;
+   }
+
+   public PriorityQueue<Point> getPtsNextToObs() {
+      return this.pointsNextToObsticles;
    }
 
    public LinkedList<Point> getBoundaries(){
@@ -169,6 +186,7 @@ public class Map {
       //connet the verticies
       a.addNeighbour(b);
       b.addNeighbour(a);
+
    }
 
    public void print() {
@@ -228,8 +246,15 @@ public class Map {
       p.setPrevious(null);
     }
   }
+  // For comparing num neighbours that are obstacles
+  private Comparator<Point> neighbourComparator = new Comparator<Point>(){
+     @Override
+     public int compare(Point o1, Point o2){
+         return o2.numObstacleNeighbours() - o1.numObstacleNeighbours();
+     }
+};
 
-
+   private PriorityQueue<Point> pointsNextToObsticles;
    private LinkedList<Point> boundary;
    private LinkedList<Point> verticies;
 }
