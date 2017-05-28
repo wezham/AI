@@ -64,7 +64,7 @@ public class Agent {
    private void get_actions(Point playerPos){
      //Our point
      Point player = playerPos;
-     LinkedList<Point> boundaryPoints = this.map.getBoundaries();
+     LinkedList<Point> boundaryPoints = this.map.getGoodBoundaries();
      LinkedList<Point> path = new LinkedList<Point>();
      ListIterator<Point> it = boundaryPoints.listIterator();
 
@@ -99,16 +99,24 @@ public class Agent {
    private boolean containsBlockers(LinkedList<Point> path){
      boolean val = false;
      for(Point p : path){
-       switch(p.getValue()){
-         case('T'): val = true ;break;
-         case('-'): val = true ;break;
-         case('*'): val = true ;break;
-         case('~'): val = true ;break;
-         default: val = false;
+       if (isBlocker(p)) {
+         val = true;
        }
      }
     return val;
    }
+
+   private boolean isBlocker(Point p) {
+     switch(p.getValue()){
+       case('T'): return true;
+       case('-'): return true;
+       case('*'): return true;
+       case('~'): return true;
+       default: return false;
+     }
+   }
+
+
    //only called if not the first action, meaning that currentState.point != null
    //given a move to make, caluclates the absolute center position of the new state
    private Point newVertexCalc(char[][] view, char action) {
