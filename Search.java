@@ -49,6 +49,49 @@ public class Search {
     }
     return new LinkedList<Point>();
   }
+  //
+  // public LinkedList<Point> solutionAStar(Point a, Point b, Orientation o){
+  //   this.map.clearParentPoints();
+  //   if(a.equals(b)){ return new LinkedList<Point>();}
+  //   PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
+  //   LinkedList<Point> openListCheck = new LinkedList<Point>();
+  //   LinkedList<Point> closedList = new LinkedList<Point>();
+  //
+  //   // Initalise starting node
+  //   a.setGCost(0);
+  //   a.setHCost(straightLineDistance(a, b));
+  //   a.setFCost();
+  //
+  //   openList.add(a);
+  //   openListCheck.add(a);
+  //
+  //   while(openList.size() != 0){
+  //     Point curr = openList.poll();
+  //     Queue<Point> adjNodes = curr.neighbours();
+  //     for(Point aj : adjNodes){
+  //       if(aj.equals(b)){
+  //         aj.setPrevious(curr);
+  //         return generatePath(aj, o);
+  //       }
+  //       int x = closedList.indexOf(aj);
+  //       int y = openListCheck.indexOf(aj);
+  //       if((y >= 0 ) && (openListCheck.get(y).getGCost() < (curr.getGCost()+1) ) ){
+  //         continue;
+  //       }
+  //       else if((x >= 0) && (closedList.get(x).getGCost() < (curr.getGCost()+1) ) ){
+  //         continue;
+  //       }else{
+  //         aj.setPrevious(curr);
+  //         aj.setHCost(obstacle(aj));
+  //         aj.setFCost();
+  //         openList.add(aj);
+  //         openListCheck.add(aj);
+  //       }
+  //     }
+  //     closedList.add(curr);
+  //   }
+  //   return new LinkedList<Point>();
+  // }
 
   private LinkedList<Point> generatePath(Point b, Orientation o){
     Point goal = b;
