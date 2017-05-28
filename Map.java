@@ -42,6 +42,26 @@ public class Map {
      return this.boundary;
    }
 
+   public LinkedList<Point> getGoodBoundaries(){
+    LinkedList<Point> goodBoundary = new LinkedList<Point>();
+    for(Point p : this.boundary) {
+       if (!isBlocker(p)) {
+         goodBoundary.add(p);
+       }
+     }
+     return goodBoundary;
+   }
+
+   private boolean isBlocker(Point p) {
+     switch(p.getValue()){
+       case('T'): return true;
+       case('-'): return true;
+       case('*'): return true;
+       case('~'): return true;
+       default: return false;
+     }
+   }
+
    public void update(char[][] view, Point center, Orientation o) {
 
       char[][] updatedView = o.orientToNorth(view);
