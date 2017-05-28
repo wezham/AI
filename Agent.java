@@ -137,15 +137,58 @@ public class Agent {
      System.out.println(this.map.keys());
      System.out.println(this.map.dynamites());
      System.out.println(this.map.axes());
+     System.out.println(this.map.doors());
      System.out.println(this.map.treasure());
+
      if(map.treasure() != null){
+
        LinkedList<Point> path = this.search.aStar(currentVertex, map.treasure(), orientation);
-       if(path.size() > 0){
+       System.out.println("Getting treasure");
+       if(!containsBlockers(path)){
          pathToTake = pathPlanner.generatePath(path, orientation);
-         gottenTreasure = true;
+         // gottenTreasure = true;
          System.out.println(toolkit.values());
-       }
+      }else{
+         getKeys();
+         unlockDoors();
+         //can we now access anything new?
+         // accessNewPtsUsingTools();
+      }
      }
+   }
+
+   // private void accessNewPtsUsingTools() {
+   //    for (Point p : this.axes) {
+   //
+   //    }
+   // }
+
+   private void getKeys(){
+      if(toolkit.get('k') == 0 && this.map.keys().size() > 0){
+         for(Point key : this.map.keys()){
+            if(!containsBlockers(this.search.aStar(currentVertex, key, orientation))){
+               System.out.println("getting keys");
+               LinkedList<Point> path = this.search.aStar(currentVertex, key, orientation);
+               pathToTake = pathPlanner.generatePath(path, orientation);
+               this.map.keys().remove(key);
+            }
+         }
+      }
+   }
+
+   private void unlockDoors(){
+      if(toolkit.get('k') > 0 && this.map.doors().size() > 0){
+         for(Point door : this.map.doors()){
+            LinkedList<Point> path = this.search.aStar(currentVertex, door, orientation);
+            Point last = path.pollLast();
+            if(!containsBlockers(path)){
+               path.add(last);
+               pathToTake = pathPlanner.generatePath(path, orientation);
+               pathToTake.add('U');
+               this.map.doors().remove(door);
+            }
+         }
+      }
    }
 
    private void returnFromGoal(){
