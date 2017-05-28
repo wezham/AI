@@ -8,7 +8,7 @@ public class Search {
 
   public LinkedList<Point> aStar(Point a, Point b, Orientation o){
     this.map.clearParentPoints();
-    // System.out.println("Finding Path from " + a + " to " + b);
+    if(a.equals(b)){ return new LinkedList<Point>();}
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
     LinkedList<Point> openListCheck = new LinkedList<Point>();
     LinkedList<Point> closedList = new LinkedList<Point>();
@@ -47,22 +47,17 @@ public class Search {
       }
       closedList.add(curr);
     }
-    return generatePath(b, o);
+    return new LinkedList<Point>();
   }
 
   private LinkedList<Point> generatePath(Point b, Orientation o){
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();
     while((goal.getParentPoint()) != null){
-      System.out.println(goal);
       path.addFirst(goal);
       goal = goal.getParentPoint();
     }
     path.addFirst(goal);
-    // System.out.println("Astar Point Path:");
-    // for(Point p : path){
-    //   System.out.println(p.toString());
-    // }
     return path;
   }
 
