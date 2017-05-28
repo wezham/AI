@@ -54,6 +54,7 @@ public class Search {
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();
     while((goal.getParentPoint()) != null){
+      System.out.println(goal);
       path.addFirst(goal);
       goal = goal.getParentPoint();
     }

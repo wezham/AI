@@ -61,58 +61,90 @@ public class Agent {
      //Our point
      Point player = playerPos;
      LinkedList<Point> boundaryPoints = this.map.getGoodBoundaries();
-     LinkedList<Point> path = new LinkedList<Point>();
      ListIterator<Point> it = boundaryPoints.listIterator();
+     LinkedList<Point> path = new LinkedList<Point>();
 
      //set the first end point to the first element of the iterator
      Point mayExplore = it.next();
-
      //search for the first path
      path = this.search.aStar(player, mayExplore, orientation);
 
 
      while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
-       if(containsBlockers(path)) {
-         // System.out.println("Bad End Goal (contains blockers) => " + mayExplore);
-       } else {
-         // System.out.println("Bad End Goal (seen) => " + mayExplore);
-       }
        mayExplore = it.next();
        path = this.search.aStar(player, mayExplore, orientation);
      }
      if(path.size() > 0 && !containsBlockers(path)){
         pathToTake = pathPlanner.generatePath(path, orientation);
         System.out.println("Explored from 1 => "  + mayExplore);
-        map.print();
      } else {
-
-        //if we enter here, we have explored all the boundariees. Now explore points surronded by obsticles
+        //get list of points with neighbours that are obstacles
         PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
-      //   Point p = pointsNextToObs.poll();
-      //   while(p != null) {
-      //      System.out.println(p + " " + p.numObstacleNeighbours());
-      //      p = pointsNextToObs.poll();
-        //
-      //   }
-
-        System.out.println("~~~~~~~~~~~~No more boundaries~~~~~~~~~~~~~~~~");
-
-        System.out.println(pointsNextToObs);
-
         mayExplore = pointsNextToObs.poll();
+        System.out.println(mayExplore);
         path = this.search.aStar(player, mayExplore, orientation);
-        System.out.println("Popping off queue => " + mayExplore + "numObstacle" + mayExplore.numObstacleNeighbours());
+        while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && (pointsNextToObs.peek() != null)){
+         //  map.print();
+          path = this.search.aStar(player, mayExplore, orientation);
+          System.out.println("Just generate path for" + mayExplore);
+          if(containsBlockers(path)){
+              System.out.println("Path to "+mayExplore+" cts blockers");
+          }
+          if(exploredPoints.contains(mayExplore)){
+              System.out.println("Explored "+mayExplore+" already");
+          }
+          mayExplore = pointsNextToObs.poll();
 
-        while(mayExplore != null && containsBlockers(path)) {
-           mayExplore = pointsNextToObs.poll();
-           path = this.search.aStar(player, mayExplore, orientation);
-           pathToTake = pathPlanner.generatePath(path, orientation);
-           System.out.println("Popping off queue => " + mayExplore);
         }
 
-        System.out.println("Explored from 2 "+ mayExplore);
+        if (pointsNextToObs.peek() == null) {
+           System.out.println("Empty queue");
+        }
+        if (!containsBlockers(path)) {
+           System.out.println("Path empty");
+        }
+        if (!exploredPoints.contains(mayExplore)) {
+           System.out.println("Contains pt");
+        }
+
+        System.out.println("Path"+ path);
+        if(path.size() > 0 && !containsBlockers(path)){
+          pathToTake = pathPlanner.generatePath(path, orientation);
+          System.out.println("Explored a obstacle adj point => "  + mayExplore);
+       }else{
+
+       }
 
      }
+   //   } else {
+     //
+   //      //if we enter here, we have explored all the boundariees. Now explore points surronded by obsticles
+   //
+   //    //
+   //    //   while(p != null) {
+   //    //      System.out.println(p + " " + p.numObstacleNeighbours());
+   //    //      p = pointsNextToObs.poll();
+   //      //
+   //    //   }
+     //
+   //      System.out.println("~~~~~~~~~~~~No more boundaries~~~~~~~~~~~~~~~~");
+     //
+   //      System.out.println(pointsNextToObs);
+     //
+   //      mayExplore = pointsNextToObs.poll();
+   //      path = this.search.aStar(player, mayExplore, orientation);
+   //      System.out.println("Popping off queue => " + mayExplore + "numObstacle" + mayExplore.numObstacleNeighbours());
+     //
+   //      while(mayExplore != null && containsBlockers(path)) {
+   //         mayExplore = pointsNextToObs.poll();
+   //         path = this.search.aStar(player, mayExplore, orientation);
+   //         pathToTake = pathPlanner.generatePath(path, orientation);
+   //         System.out.println("Popping off queue => " + mayExplore);
+   //      }
+     //
+   //      System.out.println("Explored from 2 "+ mayExplore);
+     //
+   //   }
 
 
 
