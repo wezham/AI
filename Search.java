@@ -6,7 +6,12 @@ public class Search {
     this.map = map;
   }
 
-  public LinkedList<Point> aStar(Point a, Point b, Orientation o){
+  public LinkedList<Point> aStar(Point a, Point b, Orientation o, Heuristic h, HashMap<Character, Integer> toolkit, boolean obstacles){
+    System.out.println("Finding path btw " + a + " " + b);
+
+
+    h.initHashMap(toolkit);
+
     this.map.clearParentPoints();
     if(a.equals(b)){ return new LinkedList<Point>();}
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
@@ -39,7 +44,7 @@ public class Search {
         }else{
           aj.setPrevious(curr);
           aj.setGCost(1);
-          aj.setHCost(straightLineDistance(aj, b) + obstacle(aj));
+          aj.setHCost(straightLineDistance(aj, b) + h.heuristicEvaluator(obstacles, aj, toolkit));
           aj.setFCost();
           openList.add(aj);
           openListCheck.add(aj);
@@ -68,17 +73,6 @@ public class Search {
     double y = Math.pow((a.getY()-b.getY()), 2);
     float d = (float) Math.sqrt(x + y);
     return d;
-  }
-  private float obstacle(Point dest){
-    float val = 0;
-    switch(dest.getValue()){
-      case('T'): val = 1000 ;break;
-      case('-'): val = 1000 ;break;
-      case('*'): val = 1000 ;break;
-      case('~'): val = 1000 ;break;
-      default: val = 0;
-    }
-    return val;
   }
 
   private Comparator<Point> pointComparator = new Comparator<Point>(){

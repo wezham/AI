@@ -170,13 +170,7 @@ public class Map {
             //if we have seen a vertex with this point before
             Point existingV = containsPointAtSameLocation(p);
             if (existingV != null) {
-               if(p.getValue() == 'z'){
-                  System.out.println("me " + p);
-               }
                existingV.setValue(value);
-               if(p.getValue() == 'd'){
-                  System.out.println("me " + p);
-               }
             } else {
                //add a new vertex
               //  System.out.println("New Vertex: " + p);

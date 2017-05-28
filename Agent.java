@@ -17,6 +17,7 @@ public class Agent {
    private LinkedList<Point> exploredPoints;
    private boolean gottenTreasure;
    private HashMap<Character, Integer> toolkit;
+   private Heuristic heuristic;
 
    public char get_action( char view[][] ) {
      char move = 'L';
@@ -35,6 +36,7 @@ public class Agent {
         this.orientation = new Orientation();
         this.pathPlanner = new PathPlanner();
         this.exploredPoints = new LinkedList<Point>();
+        this.heuristic = new Heuristic();
         pathToTake = new LinkedList<Character>();
         this.map = new Map(view);
         this.search = new Search(this.map);
@@ -85,11 +87,11 @@ public class Agent {
      if(boundaryPoints.size() > 0){
        Point mayExplore = it.next();
        //search for the first path
-       path = this.search.aStar(player, mayExplore, orientation);
+       path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
 
        while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
          mayExplore = it.next();
-         path = this.search.aStar(player, mayExplore, orientation);
+         path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
        }
        if(path.size() > 0 && !containsBlockers(path)){
           pathToTake = pathPlanner.generatePath(path, orientation);
@@ -97,10 +99,10 @@ public class Agent {
           //get list of points with neighbours that are obstacles
           PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
           mayExplore = pointsNextToObs.poll();
-          path = this.search.aStar(player, mayExplore, orientation);
+          path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
           while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && (pointsNextToObs.peek() != null)){
            //  map.print();
-            path = this.search.aStar(player, mayExplore, orientation);
+            path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
             mayExplore = pointsNextToObs.poll();
           }
           if(path.size() > 0 && !containsBlockers(path)){
@@ -142,18 +144,21 @@ public class Agent {
 
      if(map.treasure() != null){
 
-       LinkedList<Point> path = this.search.aStar(currentVertex, map.treasure(), orientation);
-       System.out.println("Getting treasure");
+       LinkedList<Point> path = this.search.aStar(currentVertex, map.treasure(), orientation, heuristic, toolkit, false);
        if(!containsBlockers(path)){
          pathToTake = pathPlanner.generatePath(path, orientation);
          // gottenTreasure = true;
          System.out.println(toolkit.values());
       }else{
-         getKeys();
-         unlockDoors();
-         //can we now access anything new?
-         // accessNewPtsUsingTools();
-      }
+         if (!getKeys()){
+
+         }if (!unlockDoors()) {
+           //can we now access anything new?
+           System.out.println("Going for axe");
+           System.out.println("Out here: d" + toolkit.get('d'));
+           System.out.println(this.search.aStar(currentVertex, map.axes().poll(), orientation, heuristic, toolkit, true));
+         }
+        }
      }
    }
 
@@ -163,36 +168,41 @@ public class Agent {
    //    }
    // }
 
-   private void getKeys(){
+   private boolean getKeys(){
       if(toolkit.get('k') == 0 && this.map.keys().size() > 0){
          for(Point key : this.map.keys()){
-            if(!containsBlockers(this.search.aStar(currentVertex, key, orientation))){
+            if(!containsBlockers(this.search.aStar(currentVertex, key, orientation, heuristic, toolkit, true))){
                System.out.println("getting keys");
-               LinkedList<Point> path = this.search.aStar(currentVertex, key, orientation);
+               LinkedList<Point> path = this.search.aStar(currentVertex, key, orientation, heuristic, toolkit,true);
                pathToTake = pathPlanner.generatePath(path, orientation);
                this.map.keys().remove(key);
+               return true;
             }
          }
       }
+      return false;
    }
 
-   private void unlockDoors(){
+   private boolean unlockDoors(){
       if(toolkit.get('k') > 0 && this.map.doors().size() > 0){
          for(Point door : this.map.doors()){
-            LinkedList<Point> path = this.search.aStar(currentVertex, door, orientation);
+            LinkedList<Point> path = this.search.aStar(currentVertex, door, orientation, heuristic, toolkit, false);
             Point last = path.pollLast();
             if(!containsBlockers(path)){
+               System.out.println("Unlocking door");
                path.add(last);
                pathToTake = pathPlanner.generatePath(path, orientation);
                pathToTake.add('U');
                this.map.doors().remove(door);
+               return true;
             }
          }
       }
+      return false;
    }
 
    private void returnFromGoal(){
-      LinkedList<Point> path = this.search.aStar(currentVertex, map.findVertexByCoordinates(2,2), orientation);
+      LinkedList<Point> path = this.search.aStar(currentVertex, map.findVertexByCoordinates(2,2), orientation, heuristic, toolkit, false);
       if(path.size() > 0){
        pathToTake = pathPlanner.generatePath(path, orientation);
      }
