@@ -42,6 +42,19 @@ public class Point{
       return this.neighbours.size();
    }
 
+   public void initHashMap(HashMap<Character, Integer> toolkit){
+     this.usedTools = new HashMap<Character, Integer>();
+     this.usedTools.put('d', toolkit.get('d'));
+     this.usedTools.put('a', toolkit.get('a'));
+     this.usedTools.put('k',toolkit.get('k'));
+     this.usedTools.put('r',toolkit.get('r'));
+   }
+
+   public HashMap<Character, Integer> usedTools(){
+     return this.usedTools;
+   }
+
+   private HashMap<Character, Integer> usedTools;
    //A Star
    private Point parentPoint;
    private float gCost;

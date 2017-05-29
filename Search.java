@@ -7,7 +7,7 @@ public class Search {
   }
 
   public LinkedList<Point> aStar(Point a, Point b, Orientation o, Heuristic h, HashMap<Character, Integer> toolkit, boolean obstacles){
-    h.initHashMap(toolkit);
+
     this.map.clearParentPoints();
     if(a.equals(b)){ return new LinkedList<Point>();}
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
@@ -18,6 +18,7 @@ public class Search {
     a.setGCost(0);
     a.setHCost(straightLineDistance(a, b));
     a.setFCost();
+    if(obstacles){ a.initHashMap(toolkit); }
 
     openList.add(a);
     openListCheck.add(a);
@@ -40,7 +41,9 @@ public class Search {
         }else{
           aj.setPrevious(curr);
           aj.setGCost(1);
-          aj.setHCost(straightLineDistance(aj, b) + h.heuristicEvaluator(obstacles, aj, toolkit));
+          if(obstacles)
+            aj.initHashMap(curr.usedTools());
+          aj.setHCost(straightLineDistance(aj, b) + h.heuristicEvaluator(obstacles, aj, aj.usedTools()));
           aj.setFCost();
           openList.add(aj);
           openListCheck.add(aj);

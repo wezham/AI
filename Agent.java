@@ -74,8 +74,17 @@ public class Agent {
      System.out.println("Trying to unlock doors");
      if(unlockDoors()){ return true; }
      printItemsFound();
+     getAxes();
 
      return false;
+   }
+   private void getAxes(){
+     boolean obstaclesAllowed = true;
+     if(toolkit.get('a') == 0 && this.map.axes().size() > 0){
+       Point axe = this.map.axes().peek();
+       LinkedList<Point> path = this.search.aStar(currentVertex, axe, orientation, heuristic, toolkit, obstaclesAllowed);
+       System.out.println(path);
+     }
    }
    //Lets see if we found valid results here
    private boolean foundValidPathsToAdd(LinkedList<Point> pathFound){
@@ -91,7 +100,6 @@ public class Agent {
      LinkedList<Point> path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
      while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
        mayExplore = it.next();
-        System.out.println("Trying to find path from "+player+" to "+mayExplore+"");
        path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
      }
      return path;
@@ -153,9 +161,9 @@ public class Agent {
    private boolean getKeys(){
       if(toolkit.get('k') == 0 && this.map.keys().size() > 0){
          for(Point key : this.map.keys()){
-            if(!containsBlockers(this.search.aStar(currentVertex, key, orientation, heuristic, toolkit, true))){
+            if(!containsBlockers(this.search.aStar(currentVertex, key, orientation, heuristic, toolkit, false))){
                System.out.println("getting keys");
-               LinkedList<Point> path = this.search.aStar(currentVertex, key, orientation, heuristic, toolkit,true);
+               LinkedList<Point> path = this.search.aStar(currentVertex, key, orientation, heuristic, toolkit,false);
                pathToTake = pathPlanner.generatePath(path, orientation);
                this.map.keys().remove(key);
                return true;
