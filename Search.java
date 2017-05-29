@@ -1,11 +1,12 @@
 import java.util.*;
 import java.io.*;
+//This class is used to run searches on our map
 public class Search {
 
   public Search(Map map){
     this.map = map;
   }
-
+  //Runs an A* search over our map. Note that the boolean obstacles parameter is used to determine which heuristic we use (see code summary)
   public LinkedList<Point> aStar(Point a, Point b, Orientation o, Heuristic h, HashMap<Character, Integer> toolkit, boolean obstacles){
 
     this.map.clearParentPoints();
@@ -41,6 +42,7 @@ public class Search {
         }else{
           aj.setPrevious(curr);
           aj.setGCost(1);
+          //if we are allowed to use tools
           if(obstacles)
             aj.initHashMap(curr.usedTools());
           aj.setHCost(straightLineDistance(aj, b) + h.heuristicEvaluator(obstacles, aj, aj.usedTools()));
@@ -54,7 +56,7 @@ public class Search {
     return new LinkedList<Point>();
   }
 
-
+  //backtracks through the parents of each point to generate a path
   private LinkedList<Point> generatePath(Point b, Orientation o){
     Point goal = b;
     LinkedList<Point> path = new LinkedList<Point>();

@@ -92,9 +92,11 @@ public class Agent {
      return false;
    }
 
+   //for each tree that we know exists, can we find one given the tools we currently have
    private boolean cutTrees(){
      boolean result = false;
      ListIterator<Point> treesIterator = this.map.trees().listIterator();
+     //if we have an axe and we know of trees, itterate over them trying to find one we can access
      if(toolkit.get('a') > 0 && this.map.trees().size() > 0){
        while(treesIterator.hasNext()){
          Point tree = treesIterator.next();
@@ -106,6 +108,7 @@ public class Agent {
      return result;
    }
 
+    //for each dynamite that we know exists, can we find one given the tools we currently have
    private boolean getDynamites(){
      boolean result = false;
      ListIterator<Point> dynamitesIterator = this.map.dynamites().listIterator();
@@ -120,19 +123,10 @@ public class Agent {
      return result;
    }
 
-   private boolean tryAndFindAlternatePaths(){
-     boolean obstaclesAllowed = true;
-     if(toolkit.get('a') == 0 && this.map.axes().size() > 0){
-       Point axe = this.map.axes().peek();
-       LinkedList<Point> path = this.search.aStar(currentVertex, axe, orientation, heuristic, toolkit, obstaclesAllowed);
-       this.pathToTake = pathPlanner.generatePath(path, orientation);
-       return true;
-     }
-     return false;
-   }
-
+    //tries to find a path to the goal via water
    private boolean getToTreasureViaWater(){
      boolean result = false;
+     //if we know where the treasure is, and we have a raft, run an A*
      if(toolkit.get('r') > 0 && (this.map.treasure() != null)){
        boolean obstacledAllowed = true;
        LinkedList<Point> path = this.search.aStar(currentVertex, this.map.treasure(), orientation, heuristic, toolkit, obstacledAllowed);
@@ -144,8 +138,10 @@ public class Agent {
      return result;
    }
 
+   //tries to build a raft
    private boolean getRaft(){
      boolean result = false;
+     //given that we dont have a raft and we know where a tree is
      if(toolkit.get('r') == 0 && this.map.trees().size() > 0){
        boolean noObstacles = false;
        ListIterator<Point> treeIter = this.map.trees().listIterator();
@@ -160,6 +156,7 @@ public class Agent {
      return result;
    }
 
+   //tries to find an axe
    private boolean getAxes(){
      boolean obstaclesAllowed = true;
      if(toolkit.get('a') == 0 && this.map.axes().size() > 0){
@@ -178,6 +175,8 @@ public class Agent {
       }
       return false;
    }
+
+    //checks a path to see if it is directly accessible without the use of tools
    private boolean findValidPathToObject(LinkedList<Point> pathFound){
      Point last = pathFound.pollLast();
      if(pathFound.size() > 0 && !containsBlockers(pathFound)){
@@ -188,6 +187,7 @@ public class Agent {
      return false;
    }
 
+   //itterates over (land based) boundary points and tries to find a path to one. This drives exploration
    private LinkedList<Point> searchForBoundaryPoints(ListIterator<Point> it, Point player){
      Point mayExplore = it.next();
      LinkedList<Point> path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
@@ -198,6 +198,8 @@ public class Agent {
      return path;
    }
 
+   //itterates over (land based) points which border multiple boundaries. These points are adjacent to boundaries and will
+   //be likelky to give us information if we visit them
    private LinkedList<Point> searchForPointsNextToObstacles(Point player){
      PriorityQueue<Point> pointsNextToObs = map.setAndGetObstaclePoints();
      Point mayExplore = pointsNextToObs.poll();
@@ -209,6 +211,7 @@ public class Agent {
      return path;
    }
 
+   //checks if we can access the treasure from our current location
    private boolean weCanGetTreasure(Point player){
       boolean withoutObstacles = false;
       Point treasureLocation = this.map.treasure();
@@ -250,8 +253,9 @@ public class Agent {
      System.out.println("Num moves made: "+counter);
    }
 
-
+   //checks if we can find any keys
    private boolean getKeys(){
+     //given that we dont have a key, and know the location of a key, try find one that is accesible
       if(toolkit.get('k') == 0 && this.map.keys().size() > 0){
          for(Point key : this.map.keys()){
             if(!containsBlockers(this.search.aStar(currentVertex, key, orientation, heuristic, toolkit, false))){
@@ -266,6 +270,7 @@ public class Agent {
       return false;
    }
 
+   //tries to unlock doors
    private boolean unlockDoors(){
       if(toolkit.get('k') > 0 && this.map.doors().size() > 0){
          for(Point door : this.map.doors()){
@@ -291,6 +296,7 @@ public class Agent {
      }
    }
 
+   //checks if a path contains any points that require tools to get past
    private boolean containsBlockers(LinkedList<Point> path){
      boolean val = false;
      for(Point p : path){

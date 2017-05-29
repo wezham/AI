@@ -1,10 +1,9 @@
 
 import java.util.*;
 import java.io.*;
-
+/*This class is used for all features related to orienting the player within the graph*/
 public class Orientation{
 
-  //gets given ^, >, < , v
   public Orientation() {
     this.orientation = 'N';
   }
@@ -13,6 +12,7 @@ public class Orientation{
     this.orientation = o.getOrientation();
   }
 
+  //given the users current vertex and a move, calculate his new orientation
   public void updateOrientation(char move, Point currentVertex) {
     char direction = this.orientation;
     switch (move) {
@@ -46,29 +46,24 @@ public class Orientation{
   }
 
   //given a view and an orientation, realigns the orientation of the view as would be seen
-  //if the player was facing north
+  //if the player was facing north (where north is the dir he started facing)
   public char[][] orientToNorth(char[][] oldView) {
     int x,y;
-
     char[][] newView = new char[5][5];
 
     switch (this.orientation) {
        case 'S':
-          // System.out.println("facing South changing: ");
           newView = rotateMapRight(oldView, 2);
           break;
        case 'W':
-          // System.out.println("facing West changing: ");
           newView = rotateMapRight(oldView, 3);
           break;
        case 'E':
-          // System.out.println("facing EAST changing: ");
           newView = rotateMapRight(oldView, 1);
           break;
        default:
           return oldView;
     }
-    // print_view(newView);
     return newView;
   }
 
@@ -87,18 +82,6 @@ public class Orientation{
     }
   }
 
-  public int yPositionInFrontOfPlayer(Vertex current) {
-    switch (this.orientation) {
-       case 'S':
-         return current.getY()+1;
-       case 'W':
-         return current.getY();
-       case 'E':
-         return current.getY();
-       default:
-         return current.getY()-1;
-    }
-  }
 
   public char getOrientation() {
     return this.orientation;
@@ -111,6 +94,7 @@ public class Orientation{
   private char orientation;
 
 
+  //rotates the map 90 degrees
   private char[][] rotateMapRight(char[][] oldView, int numTimes) {
     char[][] newView = copyView(oldView);
 
@@ -121,7 +105,6 @@ public class Orientation{
             newView[i][j] = oldView[5-1-j][i];
           }
        }
-      //  print_view(newView);
        oldView = copyView(newView);
      }
 
@@ -139,10 +122,9 @@ public class Orientation{
     return newView;
   }
 
-  //returns
+  //determines if a the player is facing the point next from point current
   public boolean facing(Point current, Point next) {
     boolean facing = false;
-    // System.out.println("Currently facing " + this.orientation);
     switch (this.orientation) {
        case 'N':
          facing = ((current.getY()-1) == next.getY());
@@ -157,7 +139,6 @@ public class Orientation{
          facing = ((current.getY()+1) == next.getY());
          break;
     }
-    // System.out.println("Facing " + facing);
     return facing;
   }
 

@@ -1,7 +1,7 @@
 
 import java.util.*;
 import java.io.*;
-
+//We build a map of the world as we explore it so we can remember where things were
 public class Map {
 
 
@@ -33,8 +33,7 @@ public class Map {
       //if two points have adjacent x or y, connect them
       for (Point a : this.verticies) {
          for (Point b : this.verticies) {
-            // printEdges();
-            //if they are neighbours laterally but not diagonally
+            //if they are neighbours laterally but not diagonally, create an edge between them
             Boolean xDiff = Math.abs(a.getX() - b.getX()) == 1 && a.getY() == b.getY();
             Boolean yDiff = Math.abs(a.getY() - b.getY()) == 1 && a.getX() == b.getX();
             if (xDiff || yDiff) {
@@ -66,6 +65,8 @@ public class Map {
      return this.doors;
    }
 
+   //itterates over (land based) points which border multiple boundaries. These points are adjacent to boundaries and will
+   //be likelky to give us information if we visit them
    public PriorityQueue<Point> setAndGetObstaclePoints(){
       this.pointsNextToObsticles =  new PriorityQueue<Point>(40, this.neighbourComparator);
       for(Point p : this.verticies){
@@ -83,6 +84,7 @@ public class Map {
      return this.boundary;
    }
 
+   //Searches through the graph and returns a list of points which are boundary points, and also are accessible without tools
    public LinkedList<Point> getGoodBoundaries(){
     LinkedList<Point> goodBoundary = new LinkedList<Point>();
     for(Point p : this.boundary) {
@@ -103,6 +105,7 @@ public class Map {
      }
    }
 
+   //adds tools to our toolkit if we find them
    private void addIfUseful(Point p) {
      switch(p.getValue()){
        case('d'): System.out.println("add="+p);this.dynamites.add(p);break;
@@ -115,6 +118,7 @@ public class Map {
      }
    }
 
+   //removes a tool once its been used
    public void removeIfAcquired(Point currentP) {
      Point toRemove = null;
      for (Point p2 : this.dynamites) {
@@ -151,7 +155,6 @@ public class Map {
 
       char[][] updatedView = o.orientToNorth(view);
 
-      // print_view(updatedView);
 
       // loop through point in our view
       int x,y;
@@ -170,10 +173,10 @@ public class Map {
             //if we have seen a vertex with this point before
             Point existingV = containsPointAtSameLocation(p);
             if (existingV != null) {
+               //only update the value
                existingV.setValue(value);
             } else {
-               //add a new vertex
-              //  System.out.println("New Vertex: " + p);
+               //otherwise create a new vertex
                if (p.getValue() != '.') {
                  this.verticies.add(p);
                  newVerticies.add(p);
@@ -183,35 +186,32 @@ public class Map {
          }
       }
 
+      //place the player into our map
       findVertexByCoordinates(center.getX(), center.getY()).setValue(o.playerCharacter());
 
-      // created edges between newly created verticies (which are new boundaries) and
-      //old boundaries
+      // connects all the new points in our boundaries to our map and visa versa
       if (newVerticies.size() > 0) {
+         //connect the new points to the existing map
          switch(o.getOrientation()) {
             case 'N':
-               //look for vert where new boundary y - old boundary y = 1
                newToNewBoundaryMatch(1, 0, newVerticies);
             break;
             case 'S':
-               //look for vert where old boundary y - new boundary y = -1
                newToNewBoundaryMatch(1, 0, newVerticies);
             break;
             case 'E':
-               //look for vert where new boundary x - old boundary x = 1
                newToNewBoundaryMatch(0, 1, newVerticies);
             break;
             default:
                newToNewBoundaryMatch(0, 1, newVerticies);
          }
+         //connect the new points to eachother
          oldToNewBoundaryMatch(newVerticies, this.boundary);
       }
    }
 
 
-   //searches for pairs btw old and new boundaries with the x and y differences passed as params
-   // eg. when adding new boundaries to the north of us, look for vert where new boundary y - old boundary y = 1
-   //params are in form: new - old = k;
+   //connects the newly created boundary points to the existing map
    private void oldToNewBoundaryMatch(LinkedList<Point> newBoundaries, LinkedList<Point> oldBoundaries) {
 
       for(Point oldB : oldBoundaries) {
@@ -220,7 +220,6 @@ public class Map {
             Boolean yDiff = Math.abs(newB.yDistTo(oldB)) == 1 && newB.getX() == oldB.getX();
             if (xDiff || yDiff) {
                createEdgeBtw(oldB, newB);
-              //  System.out.println("Making old/new match btw " + oldB + " || " + newB);
             }
          }
       }
@@ -230,7 +229,7 @@ public class Map {
       setBoundary();
    }
 
-   //connects new boundaries (that need to be connected)
+   //connects new boundaries to eachother
    private void newToNewBoundaryMatch(int xDiff, int yDiff, LinkedList<Point> b1) {
       for(Point p1 : b1) {
          for(Point p2 : b1) {
@@ -242,8 +241,7 @@ public class Map {
       }
    }
 
-   // checks whether a node exists at the same coordinates as v1. ie if we need to
-   // make a new node or just update an existing one
+   //checks if twp poitns are at the same location
    private Point containsPointAtSameLocation(Point p1) {
       for (Point p : this.verticies) {
          if (p.sameLocationAs(p1)) {

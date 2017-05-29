@@ -1,0 +1,30 @@
+We broke our solution up into a range of stages. They can be summarized by the following:
+1. Without using any tools, explore the map, gaining as much information as possible without the use of tools (recon)
+2. Once we have acquired all the information accessible to us, consider what tools we have, and what tools we know exist in the map
+to begin using tools to get to hard to reach locations.
+3. Once we have access to a new region of the map, do recon again before using any tools, exploring the environment and learning what is around you
+4. When we are unable to attain any more information from our environment, we conclude that we must board a raft and explore the ocean
+5. Repeat 1-5 until we have a solution
+
+At any time, we preference moves that provide us with more information gain. Step 4 above is a conclusion from our information gain heuristics.
+As we explore, we build construct and update a graph that represents all the points we have seen during our explorations (consider it our memory).
+In addition to the map, we keep note of any items of interest such as dynamites (eg. LinkedList<Point> dynamites), keys etc. as well as keeping a toolkit of
+tools we have accessible to us (HashMap<Character, Count>).
+To search our state, we used an A* search with one of two heuristics. The first heuristic used only straight line distance and did not allow us to explore points
+that required tools to access them (eg. points behind walls), which was the basis for step 1. mentioned above. The second also used straight line distance, but
+took into account the set of tools we had, or knew we could access, to deduce which points we should go to. This was the basis fort step 4. mentioned above.
+Once we had a path of points to move between, we used backtracking to generate a set of moves to get us from point to point.
+
+In order to build a map of what the agent has seen, we consider the direction he spawns facing to be 'absolute north' and the position that he spawns in to be position
+(2,2) (since we allow the corner of the 5x5 to be point (0,0)). We note his orientation at this point, and continuously update his orientation as he moves
+ around (see map.java and orientation.java). As we explore the world, continuously update our map to reflect changes.
+
+Data structures:
+We use a range of LinkedLists to hold lists of locations
+We create a graph of locations to build a map
+We use hashmaps to store our toolkit
+We use A* to search our map with variable heuristics
+We use priority queues for sorted searching of objects (see map.java)
+etc.
+
+/* design design decisions made along the way*/

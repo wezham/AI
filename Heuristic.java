@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+//used to manage our variable heuristics that we can perform during our A*
 public class Heuristic {
 
    public Heuristic(){
@@ -15,6 +16,7 @@ public class Heuristic {
      }
    }
 
+  //public method that will return one of two heuristics based on the boolean parameter
   private float noObstacleHeuristic(Point dest){
     float val = 0;
     switch(dest.getValue()){
@@ -27,6 +29,8 @@ public class Heuristic {
     }
     return val;
   }
+
+  //heuristic which does not allow points that requires tools
   private float obstacleHeuristic(Point dest, HashMap<Character, Integer> tools){
     float val = 0;
     switch(dest.getValue()){
