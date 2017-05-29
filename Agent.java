@@ -73,12 +73,61 @@ public class Agent {
      if(getKeys()){ return true; }
      System.out.println("Trying to unlock doors");
      if(unlockDoors()){ return true; }
+     System.out.println("Trying to get dynamites");
+     if(getDynamites()){ return true; }
      System.out.println("Trying to get axes");
      if(getAxes()){ return true; }
      System.out.println("Trying to get raft");
      if(getRaft()){return true; }
+     System.out.println("Trying to get to treasure via water");
      if(getToTreasureViaWater()){ return true; };
      printItemsFound();
+     System.out.println("trying to find alt path");
+     if(cutTrees()){return true;};
+     printItemsFound();
+    //  if()
+     //suppose all the above is untrue we want to take uncostly actions
+     //this includes opening doors or cutting trees ( such that we dont impose future costs)
+
+     return false;
+   }
+
+   private boolean cutTrees(){
+     boolean result = false;
+     ListIterator<Point> treesIterator = this.map.trees().listIterator();
+     if(toolkit.get('a') > 0 && this.map.trees().size() > 0){
+       while(treesIterator.hasNext()){
+         Point tree = treesIterator.next();
+         LinkedList<Point> path = this.search.aStar(currentVertex, tree, orientation, heuristic, toolkit, true);
+         if(findValidPathToObject(path)){ this.map.trees().remove(tree); result = true; break;}
+       }
+       return result;
+     }
+     return result;
+   }
+
+   private boolean getDynamites(){
+     boolean result = false;
+     ListIterator<Point> dynamitesIterator = this.map.dynamites().listIterator();
+     if(this.map.dynamites().size() > 0){
+       while(dynamitesIterator.hasNext()){
+         Point dynamite = dynamitesIterator.next();
+         LinkedList<Point> path = this.search.aStar(currentVertex, dynamite, orientation, heuristic, toolkit, true);
+         if(findValidPathToObject(path)){ this.map.dynamites().remove(dynamite); result = true; break;}
+       }
+       return result;
+     }
+     return result;
+   }
+
+   private boolean tryAndFindAlternatePaths(){
+     boolean obstaclesAllowed = true;
+     if(toolkit.get('a') == 0 && this.map.axes().size() > 0){
+       Point axe = this.map.axes().peek();
+       LinkedList<Point> path = this.search.aStar(currentVertex, axe, orientation, heuristic, toolkit, obstaclesAllowed);
+       this.pathToTake = pathPlanner.generatePath(path, orientation);
+       return true;
+     }
      return false;
    }
 
@@ -87,7 +136,10 @@ public class Agent {
      if(toolkit.get('r') > 0 && (this.map.treasure() != null)){
        boolean obstacledAllowed = true;
        LinkedList<Point> path = this.search.aStar(currentVertex, this.map.treasure(), orientation, heuristic, toolkit, obstacledAllowed);
-       pathToTake = pathPlanner.generatePath(path, orientation);
+       if(path.size() > 0){
+         pathToTake = pathPlanner.generatePath(path, orientation);
+         result = true;
+       }
      }
      return result;
    }
@@ -103,6 +155,7 @@ public class Agent {
          path = this.search.aStar(currentVertex, tree, orientation, heuristic, toolkit, noObstacles);
          if(findValidPathToObject(path)){ result = true; break; }
        }
+       return result;
      }
      return result;
    }
@@ -370,7 +423,7 @@ public class Agent {
                   }
                }
             }
-            agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
+            // agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
             action = agent.get_action( view );
             out.write( action );
          }
