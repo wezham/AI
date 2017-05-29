@@ -7,11 +7,7 @@ public class Search {
   }
 
   public LinkedList<Point> aStar(Point a, Point b, Orientation o, Heuristic h, HashMap<Character, Integer> toolkit, boolean obstacles){
-    System.out.println("Finding path btw " + a + " " + b);
-
-
     h.initHashMap(toolkit);
-
     this.map.clearParentPoints();
     if(a.equals(b)){ return new LinkedList<Point>();}
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
