@@ -29,7 +29,6 @@ public class Heuristic {
   }
   private float obstacleHeuristic(Point dest, HashMap<Character, Integer> toolkit){
     float val = 0;
-    System.out.println("In here values are " + toolkit.get('d'));
     switch(dest.getValue()){
       case('T'): if (this.usedTools.get('a') > 0) { val = 100; }else{val=350;};break;
       case('-'): if (this.usedTools.get('k') > 0) { val = 100; }else{val=300;};break;
@@ -41,7 +40,6 @@ public class Heuristic {
   }
 
   public void initHashMap(HashMap<Character, Integer> toolkit){
-    // this.usedTools = (HashMap<Character, Integer>)toolkit.clone();
     this.usedTools.put('d', toolkit.get('d'));
     this.usedTools.put('a', toolkit.get('a'));
     this.usedTools.put('k',toolkit.get('k'));

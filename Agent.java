@@ -63,10 +63,18 @@ public class Agent {
      ListIterator<Point> it = boundaryPoints.listIterator();
      LinkedList<Point> path = new LinkedList<Point>();
      //set the first end point to the first element of the iterator
+     System.out.println("Trying to get treasure");
      if(weCanGetTreasure(player)){ gottenTreasure = true; return true; }
+     System.out.println("Trying to search boundaries");
      if(foundValidPathsToAdd(searchForBoundaryPoints(it, player))) { return true; }
+     System.out.println("Trying to search for objects next to obstacles");
      if(foundValidPathsToAdd(searchForPointsNextToObstacles(player))){ return true; }
+     System.out.println("Trying to find keys");
+     if(getKeys()){ return true; }
+     System.out.println("Trying to unlock doors");
+     if(unlockDoors()){ return true; }
      printItemsFound();
+
      return false;
    }
    //Lets see if we found valid results here
@@ -83,6 +91,7 @@ public class Agent {
      LinkedList<Point> path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
      while((containsBlockers(path) || exploredPoints.contains(mayExplore)) && it.hasNext()){
        mayExplore = it.next();
+        System.out.println("Trying to find path from "+player+" to "+mayExplore+"");
        path = this.search.aStar(player, mayExplore, orientation, heuristic, toolkit, false);
      }
      return path;
@@ -140,39 +149,6 @@ public class Agent {
      System.out.println("Num moves made: "+counter);
    }
 
-   private void getTreasure(){
-     System.out.println(this.map.trees());
-     System.out.println(this.map.keys());
-     System.out.println(this.map.dynamites());
-     System.out.println(this.map.axes());
-     System.out.println(this.map.doors());
-     System.out.println(this.map.treasure());
-
-    //  if(map.treasure() != null){
-     //
-    //    LinkedList<Point> path = this.search.aStar(currentVertex, map.treasure(), orientation, heuristic, toolkit, false);
-    //    if(!containsBlockers(path)){
-    //      pathToTake = pathPlanner.generatePath(path, orientation);
-    //      // gottenTreasure = true;
-    //      System.out.println(toolkit.values());
-    //   }else{
-    //      if (!getKeys()){
-     //
-    //      }if (!unlockDoors()) {
-    //        //can we now access anything new?
-    //        System.out.println("Going for axe");
-    //        System.out.println("Out here: d" + toolkit.get('d'));
-    //        System.out.println(this.search.aStar(currentVertex, map.axes().poll(), orientation, heuristic, toolkit, true));
-    //      }
-    //     }
-    //  }
-   }
-
-   // private void accessNewPtsUsingTools() {
-   //    for (Point p : this.axes) {
-   //
-   //    }
-   // }
 
    private boolean getKeys(){
       if(toolkit.get('k') == 0 && this.map.keys().size() > 0){
