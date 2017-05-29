@@ -174,9 +174,11 @@ public class Map {
             } else {
                //add a new vertex
               //  System.out.println("New Vertex: " + p);
-               this.verticies.add(p);
-               newVerticies.add(p);
-               addIfUseful(p);
+               if (p.getValue() != '.') {
+                 this.verticies.add(p);
+                 newVerticies.add(p);
+                 addIfUseful(p);
+               }
             }
          }
       }

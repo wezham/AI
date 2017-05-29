@@ -21,7 +21,7 @@ public class Agent {
 
    public char get_action( char view[][] ) {
      char move = 'L';
-     if(gottenTreasure && (pathToTake.size() == 0)) { returnFromGoal(); } // if we have the treasure try return to starting point
+     if(gottenTreasure && (pathToTake.size() == 0)) { returnFromGoal(true); } // if we have the treasure try return to starting point
      if (counter == 0) { initaliseVars(view); } // initalise variables on first move
      else { map.update(view, currentVertex, orientation); } //otherwise update the map
      if (pathToTake.size() == 0) { get_actions(currentVertex); } //we need to generate a new path
@@ -73,23 +73,62 @@ public class Agent {
      if(getKeys()){ return true; }
      System.out.println("Trying to unlock doors");
      if(unlockDoors()){ return true; }
+     System.out.println("Trying to get axes");
+     if(getAxes()){ return true; }
+     System.out.println("Trying to get raft");
+     if(getRaft()){return true; }
+     if(getToTreasureViaWater()){ return true; };
      printItemsFound();
-     getAxes();
-
      return false;
    }
-   private void getAxes(){
+
+   private boolean getToTreasureViaWater(){
+     boolean result = false;
+     if(toolkit.get('r') > 0 && (this.map.treasure() != null)){
+       boolean obstacledAllowed = true;
+       LinkedList<Point> path = this.search.aStar(currentVertex, this.map.treasure(), orientation, heuristic, toolkit, obstacledAllowed);
+       pathToTake = pathPlanner.generatePath(path, orientation);
+     }
+     return result;
+   }
+
+   private boolean getRaft(){
+     boolean result = false;
+     if(toolkit.get('r') == 0 && this.map.trees().size() > 0){
+       boolean noObstacles = false;
+       ListIterator<Point> treeIter = this.map.trees().listIterator();
+       LinkedList<Point> path;
+       while(treeIter.hasNext()){
+         Point tree = treeIter.next();
+         path = this.search.aStar(currentVertex, tree, orientation, heuristic, toolkit, noObstacles);
+         if(findValidPathToObject(path)){ result = true; break; }
+       }
+     }
+     return result;
+   }
+
+   private boolean getAxes(){
      boolean obstaclesAllowed = true;
      if(toolkit.get('a') == 0 && this.map.axes().size() > 0){
        Point axe = this.map.axes().peek();
        LinkedList<Point> path = this.search.aStar(currentVertex, axe, orientation, heuristic, toolkit, obstaclesAllowed);
-       System.out.println(path);
        this.pathToTake = pathPlanner.generatePath(path, orientation);
+       return true;
      }
+     return false;
    }
    //Lets see if we found valid results here
    private boolean foundValidPathsToAdd(LinkedList<Point> pathFound){
+      if(pathFound.size() > 0 && !containsBlockers(pathFound)){
+         pathToTake = pathPlanner.generatePath(pathFound, orientation);
+         return true;
+      }
+      return false;
+   }
+   private boolean findValidPathToObject(LinkedList<Point> pathFound){
+     Point last = pathFound.pollLast();
      if(pathFound.size() > 0 && !containsBlockers(pathFound)){
+        pathFound.add(last);
         pathToTake = pathPlanner.generatePath(pathFound, orientation);
         return true;
      }
@@ -192,8 +231,8 @@ public class Agent {
       return false;
    }
 
-   private void returnFromGoal(){
-      LinkedList<Point> path = this.search.aStar(currentVertex, map.findVertexByCoordinates(2,2), orientation, heuristic, toolkit, false);
+   private void returnFromGoal(boolean withObjects){
+      LinkedList<Point> path = this.search.aStar(currentVertex, map.findVertexByCoordinates(2,2), orientation, heuristic, toolkit, withObjects);
       if(path.size() > 0){
        pathToTake = pathPlanner.generatePath(path, orientation);
      }
@@ -331,7 +370,7 @@ public class Agent {
                   }
                }
             }
-            // agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
+            agent.print_view( view ); // COMMENT THIS OUT BEFORE SUBMISSION
             action = agent.get_action( view );
             out.write( action );
          }
