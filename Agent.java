@@ -84,6 +84,7 @@ public class Agent {
        Point axe = this.map.axes().peek();
        LinkedList<Point> path = this.search.aStar(currentVertex, axe, orientation, heuristic, toolkit, obstaclesAllowed);
        System.out.println(path);
+       this.pathToTake = pathPlanner.generatePath(path, orientation);
      }
    }
    //Lets see if we found valid results here

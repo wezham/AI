@@ -23,6 +23,11 @@ public class PathPlanner {
       else if( counter==2 ){ moves.add('R');moves.add('R'); }
       else if( counter==1 ){ moves.add('R'); }
 
+      if (nextPoint.getValue() == '*') {
+        moves.add('B');
+      }else if(nextPoint.getValue() == 'T') {
+        moves.add('C');
+      }
       //move forward to land at goal
       moves.add('F');
       //update pointers and continue
