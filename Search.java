@@ -6,7 +6,8 @@ public class Search {
     this.map = map;
   }
 
-  public LinkedList<Point> aStar(Point a, Point b, Orientation o){
+  public LinkedList<Point> aStar(Point a, Point b, Orientation o, Heuristic h, HashMap<Character, Integer> toolkit, boolean obstacles){
+
     this.map.clearParentPoints();
     if(a.equals(b)){ return new LinkedList<Point>();}
     PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
@@ -17,6 +18,7 @@ public class Search {
     a.setGCost(0);
     a.setHCost(straightLineDistance(a, b));
     a.setFCost();
+    if(obstacles){ a.initHashMap(toolkit); }
 
     openList.add(a);
     openListCheck.add(a);
@@ -39,7 +41,9 @@ public class Search {
         }else{
           aj.setPrevious(curr);
           aj.setGCost(1);
-          aj.setHCost(straightLineDistance(aj, b) + obstacle(aj));
+          if(obstacles)
+            aj.initHashMap(curr.usedTools());
+          aj.setHCost(straightLineDistance(aj, b) + h.heuristicEvaluator(obstacles, aj, aj.usedTools()));
           aj.setFCost();
           openList.add(aj);
           openListCheck.add(aj);
@@ -49,49 +53,7 @@ public class Search {
     }
     return new LinkedList<Point>();
   }
-  //
-  // public LinkedList<Point> solutionAStar(Point a, Point b, Orientation o){
-  //   this.map.clearParentPoints();
-  //   if(a.equals(b)){ return new LinkedList<Point>();}
-  //   PriorityQueue<Point> openList = new PriorityQueue<Point>(11, this.pointComparator);
-  //   LinkedList<Point> openListCheck = new LinkedList<Point>();
-  //   LinkedList<Point> closedList = new LinkedList<Point>();
-  //
-  //   // Initalise starting node
-  //   a.setGCost(0);
-  //   a.setHCost(straightLineDistance(a, b));
-  //   a.setFCost();
-  //
-  //   openList.add(a);
-  //   openListCheck.add(a);
-  //
-  //   while(openList.size() != 0){
-  //     Point curr = openList.poll();
-  //     Queue<Point> adjNodes = curr.neighbours();
-  //     for(Point aj : adjNodes){
-  //       if(aj.equals(b)){
-  //         aj.setPrevious(curr);
-  //         return generatePath(aj, o);
-  //       }
-  //       int x = closedList.indexOf(aj);
-  //       int y = openListCheck.indexOf(aj);
-  //       if((y >= 0 ) && (openListCheck.get(y).getGCost() < (curr.getGCost()+1) ) ){
-  //         continue;
-  //       }
-  //       else if((x >= 0) && (closedList.get(x).getGCost() < (curr.getGCost()+1) ) ){
-  //         continue;
-  //       }else{
-  //         aj.setPrevious(curr);
-  //         aj.setHCost(obstacle(aj));
-  //         aj.setFCost();
-  //         openList.add(aj);
-  //         openListCheck.add(aj);
-  //       }
-  //     }
-  //     closedList.add(curr);
-  //   }
-  //   return new LinkedList<Point>();
-  // }
+
 
   private LinkedList<Point> generatePath(Point b, Orientation o){
     Point goal = b;
@@ -110,17 +72,6 @@ public class Search {
     double y = Math.pow((a.getY()-b.getY()), 2);
     float d = (float) Math.sqrt(x + y);
     return d;
-  }
-  private float obstacle(Point dest){
-    float val = 0;
-    switch(dest.getValue()){
-      case('T'): val = 1000 ;break;
-      case('-'): val = 1000 ;break;
-      case('*'): val = 1000 ;break;
-      case('~'): val = 1000 ;break;
-      default: val = 0;
-    }
-    return val;
   }
 
   private Comparator<Point> pointComparator = new Comparator<Point>(){

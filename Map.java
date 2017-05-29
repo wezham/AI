@@ -14,6 +14,7 @@ public class Map {
       this.keys = new LinkedList<Point>();
       this.dynamites = new LinkedList<Point>();
       this.trees = new LinkedList<Point>();
+      this.doors = new LinkedList<Point>();
 
       this.pointsNextToObsticles = new PriorityQueue<Point>(40, this.neighbourComparator);
       //create verticies
@@ -61,6 +62,9 @@ public class Map {
    public Point treasure(){
      return this.treasure;
    }
+   public  LinkedList<Point> doors(){
+     return this.doors;
+   }
 
    public PriorityQueue<Point> setAndGetObstaclePoints(){
       this.pointsNextToObsticles =  new PriorityQueue<Point>(40, this.neighbourComparator);
@@ -101,8 +105,9 @@ public class Map {
 
    private void addIfUseful(Point p) {
      switch(p.getValue()){
-       case('d'): this.dynamites.add(p);break;
+       case('d'): System.out.println("add="+p);this.dynamites.add(p);break;
        case('$'): this.treasure = p;break;
+       case('-'): this.doors.add(p);break;
        case('k'): this.keys.add(p);break;
        case('a'): this.axes.add(p);break;
        case('T'): this.trees.add(p);break;
@@ -325,5 +330,6 @@ public class Map {
    private LinkedList<Point> dynamites;
    private LinkedList<Point> keys;
    private LinkedList<Point> trees;
+   private LinkedList<Point> doors;
    private Point treasure;
 }
