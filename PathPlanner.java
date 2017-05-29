@@ -14,10 +14,15 @@ public class PathPlanner {
 
     while( nextPoint != null) {
       //keep turning till we face the goal
+      int counter = 0;
       while(!variableO.facing(currentPoint, nextPoint)) {
         variableO.updateOrientation('R', null);
-        moves.add('R');
+        counter ++;
       }
+      if(counter==3){ moves.add('L'); }
+      else if( counter==2 ){ moves.add('R');moves.add('R'); }
+      else if( counter==1 ){ moves.add('R'); }
+
       //move forward to land at goal
       moves.add('F');
       //update pointers and continue
